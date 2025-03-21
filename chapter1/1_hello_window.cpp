@@ -1,3 +1,10 @@
+// GLAD和GLFW
+// 一些初始化工作
+// 回调绑定
+// 处理输入
+// 双缓冲
+// NDC坐标
+
 #include <glad/glad.h> // 用来帮助获取实现OpenGL规范的驱动开发商所写的各个函数的位置
 #include <GLFW/glfw3.h> // GLFW是一个专门针对OpenGL的C语言库，它提供了一些渲染物体所需的最低限度的接口（比如创建一个窗口）
 #include <iostream>

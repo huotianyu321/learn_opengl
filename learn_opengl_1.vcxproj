@@ -133,8 +133,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\glad\src\glad.c" />
-    <ClCompile Include="1_2_hello_triangle_test1.cpp" />
-    <ClCompile Include="1_2_hello_triangle.cpp" />
+    <ClCompile Include="chapter1\3_shader_2.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
