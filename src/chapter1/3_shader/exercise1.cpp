@@ -1,31 +1,15 @@
-// 顶点数据包含更多的顶点属性 不只是位置信息
+// 修改顶点着色器让三角形上下颠倒
 
 #include <glad/glad.h> 
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include "3_shader_class.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int newWidth, int newHeight);
 void processInupt(GLFWwindow* window);
 
-const char* vertexShaderSource = "#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "layout (location = 1) in vec3 aColor;\n" // 从顶点数据接收，之后传递给片段着色器
-    "out vec4 ourColor;\n" 
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-    "   ourColor = vec4(aColor, 1.0);\n"
-    "}\n";
-const char* fragmentShaderSource = "#version 330 core\n"
-    "out vec4 FragColor;\n"
-    "in vec4 ourColor;\n" // 类型和名称必须与传递的变量相同
-    "void main()\n"
-    "{\n"
-    "   FragColor = ourColor;\n"
-    "}\n";
-
-int isSuccess;
-char infoLog[512];
+const char* vertexCodePath = "./src/chapter1/3_shader/exercise1_vertex_shader.txt";
+const char* fragmentCodePath = "./src/chapter1/3_shader/3_fragment_shader_code.txt";
 
 int main()
 {
@@ -45,6 +29,7 @@ int main()
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback); // 注册窗口变化回调
 
     // ===
+    int isSuccess;
     isSuccess = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     if (!isSuccess) {
         std::cout << "初始化GLAD失败" << std::endl;
@@ -55,45 +40,7 @@ int main()
     }
     glViewport(0, 0, 800, 600);
 
-    // ===
-    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &isSuccess);
-    if (!isSuccess) {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "顶点着色器编译失败：" << infoLog << std::endl;
-    }
-    else {
-        std::cout << "顶点着色器编译成功, vertexShader: " << vertexShader << std::endl;
-    }
-    // ===
-    unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &isSuccess);
-    if (!isSuccess) {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << "片段着色器编译失败：" << infoLog << std::endl;
-    }
-    else {
-        std::cout << "片段着色器编译成功, fragmentShader: " << fragmentShader << std::endl;
-    }
-    unsigned int shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &isSuccess);
-    if (!isSuccess) {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cout << "着色器链接失败: " << infoLog << std::endl;
-    }
-    else {
-        std::cout << "着色器链接成功, shaderProgram: " << shaderProgram << std::endl;
-    }
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-
+    Shader* myShaderWrapper = new Shader(vertexCodePath, fragmentCodePath);
 
     //===
     float vertices[] = {
@@ -115,7 +62,7 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     // 指定顶点着色器中location=1的顶点属性, 取3个元素，类型， 不归一化, 6个元素的跨度，偏移量为3
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
     //glBindBuffer(GL_ARRAY_BUFFER, 0);
     //glBindVertexArray(0);
@@ -128,9 +75,9 @@ int main()
 
         processInupt(window);
 
-        glUseProgram(shaderProgram);
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        myShaderWrapper->use();
+        glBindVertexArray(VAO); // 这个配置中记录了这两个变量的值应该如何获取
+        glDrawArrays(GL_TRIANGLES, 0, 3); // 绘制时按照前两行的指示获取相应的值进行绘制
 
         glfwPollEvents();
         glfwSwapBuffers(window);
@@ -138,7 +85,7 @@ int main()
 
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-    glDeleteProgram(shaderProgram);
+
     glfwTerminate();
     return 0;
 }
