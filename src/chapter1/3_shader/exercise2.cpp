@@ -2,8 +2,10 @@
 
 #include <glad/glad.h> 
 #include <GLFW/glfw3.h>
+
+#include <learn_opengl/shader_class.h>
+
 #include <iostream>
-#include "3_shader_class.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int newWidth, int newHeight);
 void processInupt(GLFWwindow* window);

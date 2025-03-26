@@ -19,11 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\chapter1\3_shader\3_shader_class.cpp" />
+    <ClCompile Include="src\call_backs.cpp" />
+    <ClCompile Include="src\chapter1\4_texture\exercise_4.cpp" />
     <ClCompile Include="src\glad.c" />
+    <ClCompile Include="src\shader_class.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\chapter1\3_shader\3_shader_class.h" />
+    <ClInclude Include="includes\glad\glad.h" />
+    <ClInclude Include="includes\GLFW\glfw3.h" />
+    <ClInclude Include="includes\GLFW\glfw3native.h" />
+    <ClInclude Include="includes\KHR\khrplatform.h" />
+    <ClInclude Include="includes\learn_opengl\call_backs.h" />
+    <ClInclude Include="includes\learn_opengl\shader_class.h" />
+    <ClInclude Include="includes\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\chapter1\3_shader\3_fragment_shader_code.txt" />
@@ -32,6 +40,20 @@
     <Text Include="src\chapter1\3_shader\exercise2_vertex_shader.txt" />
     <Text Include="src\chapter1\3_shader\exercise3_fragment_shader.txt" />
     <Text Include="src\chapter1\3_shader\exercise3_vertex_shader.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="libs\glfw3.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\chapter1\4_texture\1_shader_code.fragment" />
+    <None Include="src\chapter1\4_texture\1_shader_code.vertex" />
+    <None Include="src\chapter1\4_texture\2_shader_code.fragment" />
+    <None Include="src\chapter1\4_texture\exercise_1_shader_code.fragment" />
+    <None Include="src\chapter1\4_texture\exercise_4_shader_code.fragment" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\awesomeface.png" />
+    <Image Include="resources\container.jpg" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
