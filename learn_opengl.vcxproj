@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\call_backs.cpp" />
-    <ClCompile Include="src\chapter1\4_texture\exercise_4.cpp" />
+    <ClCompile Include="src\chapter1\5_transform\exercise2_2.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\shader_class.cpp" />
   </ItemGroup>
@@ -50,6 +50,8 @@
     <None Include="src\chapter1\4_texture\2_shader_code.fragment" />
     <None Include="src\chapter1\4_texture\exercise_1_shader_code.fragment" />
     <None Include="src\chapter1\4_texture\exercise_4_shader_code.fragment" />
+    <None Include="src\chapter1\5_transform\2_shader.fragment" />
+    <None Include="src\chapter1\5_transform\2_shader.vertex" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\awesomeface.png" />
