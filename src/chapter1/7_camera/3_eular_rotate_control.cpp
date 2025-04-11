@@ -1,5 +1,6 @@
 // 通过欧拉角来计算相机的朝向cameraFront向量
 // 这个例子只设计俯仰角和偏航角，不涉及滚转角
+// glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);这个方法有bug
 
 #define STB_IMAGE_IMPLEMENTATION
 
@@ -26,29 +27,35 @@ glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f); // 初始相机位置
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f); // 初始相机朝向
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f); 
 
-
 float yaw = -90.0f; // 偏航角, 一开始是看向-z轴的
 float pitch = 0.0f; // 俯仰角, 一开始是水平的
 
-float lastX = 0.0f; // 记录上一帧鼠标位置
-float lastY = 0.0f; 
-bool isMouseFirstIn = true; // 特殊处理鼠标第一次进入窗口
-float sensitivity = 0.005f; // 鼠标灵敏度
+float lastX = WIDTH / 2; // 记录上一帧鼠标位置. 初始设置为窗口中心，因为一开始相机的俯仰角和偏航角为0
+float lastY = HEIGHT / 2; 
+//bool isMouseFirstIn = true; // 特殊处理鼠标第一次进入窗口
+//bool mouseControlActive = false; // 当鼠标移到窗口中心再激活
+float sensitivity = 0.05f; // 鼠标灵敏度
+
+float fov = 45.0f; // 视野角度
 
 float deltaTime = 0.0f; // 当前帧与上一帧的时间差
 float lastFrameTime = 0.0f; // 上一帧的时间
 
-
-
 // 处理wasd键盘输入
 void processWASD(GLFWwindow* window);
 void mouse_move_cb(GLFWwindow* window, double xposIn, double yposIn);
+void mouse_scroll_cb(GLFWwindow* window, double xoffset, double yoffset);
 
 int main() {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	// 设置全屏窗口
+	/*GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+	GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "Title", monitor, NULL);*/
 
 	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "COORDINATE SYSTEM", NULL, NULL);
 	if (window == NULL) {
@@ -63,14 +70,18 @@ int main() {
 
 	// 绑定鼠标移动回调
 	glfwSetCursorPosCallback(window, mouse_move_cb);
-	// 将鼠标限制在窗口内，并隐藏鼠标光标
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	// 将鼠标限制在窗口内，并隐藏鼠标光标 // 有bug
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	// 绑定鼠标滚轮回调
+	glfwSetScrollCallback(window, mouse_scroll_cb);
 
 	// 初始化GLAD 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		std::cout << "加载GLAD失败" << std::endl;
 		return -1;
 	}
+	glViewport(0, 0, WIDTH, HEIGHT); // 设置视口大小
 
 	float vertices[] = {
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -196,11 +207,6 @@ int main() {
 		glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
 
-	// 投影矩阵其实很少发生变化, 一般在窗口大小改变时才会改变, 可以不在每帧都传递
-	glm::mat4 projection;
-	projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f); // 透视投影
-	ourShader.setMat4("projection", projection); // 透视投影矩阵
-
 	// 开启深度测试
 	glEnable(GL_DEPTH_TEST);
 	// 渲染循环
@@ -226,6 +232,11 @@ int main() {
 		glBindTexture(GL_TEXTURE_2D, texture2);
 		// 激活着色器
 		ourShader.use();
+
+		// 鼠标滚轮控制了fov，每帧重新计算
+		glm::mat4 projection;
+		projection = glm::perspective(glm::radians(fov), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f); // 透视投影
+		ourShader.setMat4("projection", projection); // 透视投影矩阵
 
 		// 创建观察矩阵
 		glm::mat4 view;
@@ -301,12 +312,31 @@ void mouse_move_cb(GLFWwindow* window, double xPosIn, double yPosIn) {
 	// 当前帧的鼠标位置
 	float xPos = static_cast<float>(xPosIn);
 	float yPos = static_cast<float>(yPosIn);
+	std::cout << "X: " << xPos << " Y: " << yPos << std::endl;
 
-	if (isMouseFirstIn) {
-		lastX = xPos; // 记录鼠标第一次进入窗口时的位置
-		lastY = yPos;
-		isMouseFirstIn = false; // 只处理一次
-	}
+	// 让鼠标从外边移动到中心再激活控制
+	//if (
+	//	!mouseControlActive 
+	//	&& xPos >= 390 
+	//	&& xPos <= 410 
+	//	&& yPos >= 290
+	//	&& yPos <= 300
+	//) {
+	//	mouseControlActive = true; // 鼠标移到窗口中心时激活
+	//	lastX = xPos;
+	//	lastY = yPos;
+	//}
+	
+	//if (!mouseControlActive) {
+	//	return; 
+	//}
+
+
+	//if (isMouseFirstIn) {
+	//	lastX = xPos; // 记录鼠标第一次进入窗口时的位置
+	//	lastY = yPos;
+	//	isMouseFirstIn = false; // 只处理一次
+	//}
 
 	// 计算鼠标移动的距离
 	float xOffset = xPos - lastX;
@@ -325,7 +355,7 @@ void mouse_move_cb(GLFWwindow* window, double xPosIn, double yPosIn) {
 	if (pitch > 89.0f) {
 		pitch = 89.0f;
 	}
-	else if (pitch < -89.0f) {
+	if (pitch < -89.0f) {
 		pitch = -89.0f;
 	}
 
@@ -336,3 +366,16 @@ void mouse_move_cb(GLFWwindow* window, double xPosIn, double yPosIn) {
 	cameraFront = glm::normalize(front); // 归一化
 }
 
+
+void mouse_scroll_cb(GLFWwindow* window, double xoffset, double yoffset) {
+	float xOffset = static_cast<float>(xoffset);
+	float yOffset = static_cast<float>(yoffset);
+	std::cout << "X: " << xOffset << " Y: " << yOffset << std::endl;
+	fov += yOffset;
+	if (fov < 1.0f) {
+		fov = 1.0f;
+	}
+	if (fov > 45.0f) {
+		fov = 45.0f;
+	}
+}
