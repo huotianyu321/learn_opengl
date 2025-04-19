@@ -4,6 +4,8 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 
+#include <iostream>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stb_image/stb_image.h>
@@ -12,8 +14,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <learn_opengl/shader_class.h>
-#include <learn_opengl/call_backs.h>
+#include <headers/shader_class.h>
+#include <headers/call_backs.h>
 
 const unsigned int WIDTH = 800;
 const unsigned int HEIGHT = 600;

@@ -1,6 +1,6 @@
 // 这里把第一章第三节的着色器封装类拷贝了一份
 
-#include <learn_opengl/shader_class.h>
+#include <headers/shader_class.h>
 #include <fstream>
 #include <sstream>
 #include <iostream>
