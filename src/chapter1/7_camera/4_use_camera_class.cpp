@@ -1,6 +1,4 @@
-// 通过欧拉角来计算相机的朝向cameraFront向量
-// 这个例子只设计俯仰角和偏航角，不涉及滚转角
-// glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);这个方法有bug
+// 使用相机类
 
 #define STB_IMAGE_IMPLEMENTATION
 
@@ -17,6 +15,8 @@
 #include <headers/shader_class.h>
 #include <headers/call_backs.h>
 
+#include "4_camera_class.h"
+
 const unsigned int WIDTH = 800;
 const unsigned int HEIGHT = 600;
 
@@ -27,13 +27,13 @@ const char* fragmentCodePath = "./src/chapter1/6_coordinate_system/1_shader.frag
 
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f); // 初始相机位置
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f); // 初始相机朝向
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f); 
-
+glm::vec3 worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
 float yaw = -90.0f; // 偏航角, 一开始是看向-z轴的
 float pitch = 0.0f; // 俯仰角, 一开始是水平的
+Camera camera = Camera(cameraPos, worldUp, yaw, pitch);
 
 float lastX = WIDTH / 2; // 记录上一帧鼠标位置. 初始设置为窗口中心，因为一开始相机的俯仰角和偏航角为0
-float lastY = HEIGHT / 2; 
+float lastY = HEIGHT / 2;
 //bool isMouseFirstIn = true; // 特殊处理鼠标第一次进入窗口
 bool mouseControlActive = false; // 当鼠标移到窗口中心再激活
 float sensitivity = 0.05f; // 鼠标灵敏度
@@ -216,7 +216,7 @@ int main() {
 		processInupt(window);
 		processWASD(window); // 处理WASD键盘输入, 改变全局变量cameraPos
 
-		float currentFrameTime = (float) glfwGetTime();
+		float currentFrameTime = (float)glfwGetTime();
 		deltaTime = currentFrameTime - lastFrameTime;
 		lastFrameTime = currentFrameTime;
 
@@ -237,20 +237,11 @@ int main() {
 
 		// 鼠标滚轮控制了fov，每帧重新计算
 		glm::mat4 projection;
-		projection = glm::perspective(glm::radians(fov), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f); // 透视投影
+		projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f); // 透视投影
 		ourShader.setMat4("projection", projection); // 透视投影矩阵
 
 		// 创建观察矩阵
-		glm::mat4 view;
-		view = glm::lookAt(
-			cameraPos, // 相机位置
-			cameraPos + cameraFront, // 目标点位置向量
-			//glm::vec3(cameraFront.x * 0.1, cameraFront.y * 0.1, cameraFront.z * 0.1), // 测试用
-			cameraUp // 相机上方向
-		);
-		// 传递观察矩阵到着色器
-		//unsigned int viewLoc = glGetUniformLocation(ourShader.ID, "view");
-		//glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+		glm::mat4 view = camera.GetViewMatrix();
 		ourShader.setMat4("view", view);
 
 		// 通过模型矩阵在循环中改变立方体的位置(使用相同的顶点数据)
@@ -292,21 +283,17 @@ int main() {
 
 
 void processWASD(GLFWwindow* window) {
-	// 这里不能写成常量, 每两帧之间的时间差不是固定的
-	// 时间差越大, 移动应该越多
-	float cameraDisplacement = 2.5f * deltaTime;
-
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		cameraPos += cameraDisplacement * cameraFront;
+		camera.ProcessKeyboard(FORWARD, deltaTime);
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		cameraPos -= cameraDisplacement * cameraFront;
+		camera.ProcessKeyboard(BACKWARD, deltaTime);
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraDisplacement;
+		camera.ProcessKeyboard(LEFT, deltaTime);
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraDisplacement;
+		camera.ProcessKeyboard(RIGHT, deltaTime);
 	}
 }
 
@@ -328,7 +315,7 @@ void mouse_move_cb(GLFWwindow* window, double xPosIn, double yPosIn) {
 		lastX = xPos;
 		lastY = yPos;
 	}
-	
+
 	if (!mouseControlActive) {
 		return; 
 	}
@@ -344,40 +331,19 @@ void mouse_move_cb(GLFWwindow* window, double xPosIn, double yPosIn) {
 	float xOffset = xPos - lastX;
 	// 反向y轴，屏幕坐标系是以左上角为原点的. 
 	// 当鼠标向下移动时，y坐标增大，但此时俯仰角应该减小
-	float yOffset = lastY - yPos; 
+	float yOffset = lastY - yPos;
 
 	// 更新上一帧鼠标位置
-	lastX = xPos; 
+	lastX = xPos;
 	lastY = yPos;
 
 	yaw += xOffset * sensitivity; // 更新偏航角
 	pitch += yOffset * sensitivity; // 更新俯仰角
 
-	// 限制俯仰角上下不超过90°
-	if (pitch > 89.0f) {
-		pitch = 89.0f;
-	}
-	if (pitch < -89.0f) {
-		pitch = -89.0f;
-	}
-
-	glm::vec3 front; // 相机朝向向量
-	front.y = sin(glm::radians(pitch)); 
-	front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch)); 
-	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch)); 
-	cameraFront = glm::normalize(front); // 归一化
+	camera.ProcessMouseMovement(xOffset, yOffset); // 更新相机的朝向
 }
 
 
 void mouse_scroll_cb(GLFWwindow* window, double xoffset, double yoffset) {
-	float xOffset = static_cast<float>(xoffset);
-	float yOffset = static_cast<float>(yoffset);
-	std::cout << "X: " << xOffset << " Y: " << yOffset << std::endl;
-	fov += yOffset;
-	if (fov < 1.0f) {
-		fov = 1.0f;
-	}
-	if (fov > 45.0f) {
-		fov = 45.0f;
-	}
+	camera.ProcessMouseScroll(yoffset);
 }
