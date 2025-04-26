@@ -5,6 +5,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "exercise2_my_lookAt.h"
+
 // 摄像机移动方向
 enum Camera_Movement {
 	FORWARD,
@@ -72,7 +74,9 @@ public:
 	* 获取相机的观察矩阵
 	*/
 	glm::mat4 GetViewMatrix() {
-		return glm::lookAt(Position, Position + Front, Up);
+		return getMyLookAt(Front, Right, Up, Position);
+
+		//return glm::lookAt(Position, Position + Front, Up);
 	}
 
 

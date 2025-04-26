@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\chapter1\7_camera\4_use_camera_class.cpp" />
+    <ClCompile Include="src\chapter1\7_camera\exercise2_my_lookAt.h" />
     <ClCompile Include="src\utils\call_backs.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\utils\shader_class.cpp" />
