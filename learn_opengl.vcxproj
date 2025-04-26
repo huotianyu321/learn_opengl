@@ -19,8 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\chapter1\7_camera\4_use_camera_class.cpp" />
-    <ClCompile Include="src\chapter1\7_camera\exercise2_my_lookAt.h" />
+    <ClCompile Include="src\chapter1\7_camera\exercise2_use_my_lookAt.cpp" />
     <ClCompile Include="src\utils\call_backs.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\utils\shader_class.cpp" />
@@ -35,7 +34,7 @@
     <ClInclude Include="includes\headers\shader_class.h" />
     <ClInclude Include="includes\learn_opengl\shader_class.h" />
     <ClInclude Include="includes\stb_image\stb_image.h" />
-    <ClInclude Include="src\chapter1\7_camera\4_camera_class.h" />
+    <ClInclude Include="src\chapter1\7_camera\exercise2_my_lookAt.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\chapter1\3_shader\3_fragment_shader_code.txt" />

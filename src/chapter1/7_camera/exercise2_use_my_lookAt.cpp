@@ -15,7 +15,7 @@
 #include <headers/shader_class.h>
 #include <headers/call_backs.h>
 
-#include "4_camera_class.h"
+#include "exercise2_my_lookAt.h"
 
 const unsigned int WIDTH = 1200;
 const unsigned int HEIGHT = 900;
@@ -305,19 +305,19 @@ void mouse_move_cb(GLFWwindow* window, double xPosIn, double yPosIn) {
 
 	// 让鼠标从外边移动到中心再激活控制
 	if (
-		!mouseControlActive 
+		!mouseControlActive
 		&& xPos >= WIDTH / 2 - 50
 		&& xPos <= WIDTH / 2 + 50
 		&& yPos >= HEIGHT / 2 - 50
 		&& yPos <= HEIGHT / 2 + 50
-	) {
+		) {
 		mouseControlActive = true; // 鼠标移到窗口中心时激活
 		lastX = xPos;
 		lastY = yPos;
 	}
 
 	if (!mouseControlActive) {
-		return; 
+		return;
 	}
 
 

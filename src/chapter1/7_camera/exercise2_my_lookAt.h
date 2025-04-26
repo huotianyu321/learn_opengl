@@ -1,54 +1,168 @@
-// 自己实现一个函数获得lookAt矩阵
-// lookAt矩阵的形式看教程LookAt
+// 自己实现一个函数获得lookAt矩阵(如何获得旋转矩阵看不懂）
+
+
+#ifndef CAMERA_H
+#define CAMERA_H
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-// 参数是相机的方向向量（Front)、右向量、上向量和位置
-glm::mat4 getMyLookAt(glm::vec3 Front, glm::vec3 Right, glm::vec3 Up, glm::vec3 Pos) {
-	float Rx = Right.x;
-	float Ry = Right.y;
-	float Rz = Right.z;
-	float Ux = Up.x;
-	float Uy = Up.y;
-	float Uz = Up.z;
-	float Dx = -Front.x;
-	float Dy = -Front.y;
-	float Dz = -Front.z;
-	float Px = Pos.x;
-	float Py = Pos.y;
-	float Pz = Pos.z;
-	glm::mat4 m1 = glm::mat4(1.0f);
-	glm::mat4 m2 = glm::mat4(1.0f);
-	for (int i = 0; i < 4; ++i) {
-		for (int j = 0; j < 4; ++j) {
-			if (i == j) {
-				m1[i][j] = 1.0f;
-				m2[i][j] = 1.0f;
-			}
-			else {
-				m1[i][j] = 0.0f;
-				m2[i][j] = 0.0f;
-			}
+// 抄答案
+glm::mat4 getMyLookAt(glm::vec3 position, glm::vec3 target, glm::vec3 worldUp)
+{
+	// 计算相机坐标系
+	glm::vec3 zaxis = glm::normalize(position - target);
+	glm::vec3 xaxis = glm::normalize(glm::cross(glm::normalize(worldUp), zaxis));
+	glm::vec3 yaxis = glm::cross(zaxis, xaxis);
+
+	// 位移矩阵, glm中第二个中括号是行, 第一个中括号是列
+	// 要产生相对摄像机的位移效果，这里用负值移动世界坐标
+	glm::mat4 translation = glm::mat4(1.0f);
+	translation[3][0] = -position.x; // 第1行第4列
+	translation[3][1] = -position.y;
+	translation[3][2] = -position.z;
+
+	// 旋转矩阵（GPT问一下为什么这样能产生旋转矩阵）
+	glm::mat4 rotation = glm::mat4(1.0f);
+	rotation[0][0] = xaxis.x; // First column, first row
+	rotation[1][0] = xaxis.y;
+	rotation[2][0] = xaxis.z;
+	rotation[0][1] = yaxis.x; // First column, second row
+	rotation[1][1] = yaxis.y;
+	rotation[2][1] = yaxis.z;
+	rotation[0][2] = zaxis.x; // First column, third row
+	rotation[1][2] = zaxis.y;
+	rotation[2][2] = zaxis.z;
+
+	// 从右向左，先平移后旋转
+	return rotation * translation;
+}
+
+
+// 摄像机移动方向
+enum Camera_Movement {
+	FORWARD,
+	BACKWARD,
+	LEFT,
+	RIGHT
+};
+
+// 默认摄像机参数
+const float YAW = -90.0f; // 偏航角
+const float PITCH = 0.0f; // 俯仰角
+const float SPEED = 2.5f; // 移动速度
+const float SENSITIVITY = 0.1f; // 鼠标灵敏度
+const float ZOOM = 45.0f; // 缩放比例
+
+class Camera {
+public:
+	glm::vec3 Position; // 摄像机位置
+	glm::vec3 Front; // 摄像机朝向
+	glm::vec3 Up; // 摄像机上方向
+	glm::vec3 Right; // 摄像机右方向
+	glm::vec3 WorldUp; // 世界坐标系的上方向
+	float Yaw; // 偏航角
+	float Pitch; // 俯仰角
+	float MovementSpeed; // 移动速度
+	float MouseSensitivity; // 鼠标灵敏度
+	float Zoom; // 缩放比例
+
+	// 构造函数1
+	Camera(
+		glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
+		float yaw = YAW,
+		float pitch = PITCH
+	) : Front(glm::vec3(0.0f, 0.0f, -1.0f)),
+		MovementSpeed(SPEED),
+		MouseSensitivity(SENSITIVITY),
+		Zoom(ZOOM)
+	{
+		Position = position;
+		WorldUp = up;
+		Yaw = yaw;
+		Pitch = pitch;
+		updateCameraVectors();
+	}
+
+	// 构造函数2
+	Camera(
+		float posX, float posY, float posZ,
+		float upX, float upY, float upZ,
+		float yaw, float pitch
+	) : Front(glm::vec3(0.0f, 0.0f, -1.0f)),
+		MovementSpeed(SPEED),
+		MouseSensitivity(SENSITIVITY),
+		Zoom(ZOOM)
+	{
+		Position = glm::vec3(posX, posY, posZ);
+		WorldUp = glm::vec3(upX, upY, upZ);
+		Yaw = yaw;
+		Pitch = pitch;
+		updateCameraVectors();
+	}
+
+	/*
+	* 获取相机的观察矩阵
+	*/
+	glm::mat4 GetViewMatrix() {
+		return getMyLookAt(Position, Front, WorldUp);
+	}
+
+
+	void ProcessKeyboard(Camera_Movement direction, float deltaTime) {
+		float velocity = MovementSpeed * deltaTime;
+		if (direction == FORWARD)
+			Position += Front * velocity;
+		if (direction == BACKWARD)
+			Position -= Front * velocity;
+		if (direction == LEFT)
+			Position -= Right * velocity;
+		if (direction == RIGHT)
+			Position += Right * velocity;
+	}
+
+
+	void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true) {
+		xoffset *= MouseSensitivity;
+		yoffset *= MouseSensitivity;
+		Yaw += xoffset;
+		Pitch += yoffset;
+		if (constrainPitch) {
+			if (Pitch > 89.0f)
+				Pitch = 89.0f;
+			if (Pitch < -89.0f)
+				Pitch = -89.0f;
+		}
+		updateCameraVectors();
+	}
+	void ProcessMouseScroll(float yoffset) {
+		Zoom -= (float)yoffset;
+		if (Zoom < 1.0f) {
+			Zoom = 1.0f;
+		}
+		if (Zoom > 45.0f) {
+			Zoom = 45.0f;
 		}
 	}
-	m1[0][0] = Rx;
-	m1[0][1] = Ry;
-	m1[0][2] = Rz;
 
-	m1[1][0] = Ux;
-	m1[1][1] = Uy;
-	m1[1][2] = Uz;
-	
-	m1[2][0] = Dx;
-	m1[2][1] = Dy;
-	m1[2][2] = Dz;
+private:
+	/*
+	* 更新相机的方向向量
+	*/
+	void updateCameraVectors() {
+		// 根据俯仰角和偏航角计算前向量
+		glm::vec3 front;
+		front.y = sin(glm::radians(Pitch));
+		front.x = cos(glm::radians(Pitch)) * cos(glm::radians(Yaw));
+		front.z = cos(glm::radians(Pitch)) * sin(glm::radians(Yaw));
+		Front = glm::normalize(front);
 
-	m2[0][3] = -Px;
-	m2[1][3] = -Py;
-	m2[2][3] = -Pz;
+		// 计算右向量和上向量， 右手定则， 叉乘
+		Right = glm::normalize(glm::cross(Front, WorldUp)); // 右向量
+		Up = glm::normalize(glm::cross(Right, Front)); // 上向量
+	}
+};
 
-	return m1 * m2;
-
-}
+#endif

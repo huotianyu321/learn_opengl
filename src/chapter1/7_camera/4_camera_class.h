@@ -74,9 +74,7 @@ public:
 	* 获取相机的观察矩阵
 	*/
 	glm::mat4 GetViewMatrix() {
-		return getMyLookAt(Front, Right, Up, Position);
-
-		//return glm::lookAt(Position, Position + Front, Up);
+		return glm::lookAt(Position, Position + Front, Up);
 	}
 
 
