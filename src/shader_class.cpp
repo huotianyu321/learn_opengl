@@ -1,6 +1,6 @@
 // 这里把第一章第三节的着色器封装类拷贝了一份
 
-#include <headers/shader_class.h>
+#include <HEADER/shader_class.h>
 #include <fstream>
 #include <sstream>
 #include <iostream>
