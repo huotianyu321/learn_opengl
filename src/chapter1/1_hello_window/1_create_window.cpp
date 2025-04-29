@@ -9,8 +9,8 @@
 #include <HEADER/call_backs.hpp>
 #include <iostream>
 
-const unsigned int SCREEN_WIDTH = 1200;
-const unsigned int SCREEN_HEIGHT = 900;
+const unsigned int SCREEN_WIDTH = 2000;
+const unsigned int SCREEN_HEIGHT = 1500;
 
 int main() {
 	// 初始化GLFW和GLAD， 创建窗口，设置viewport

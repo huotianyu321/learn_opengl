@@ -19,8 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\chapter1\1_hello_window\1_create_window.cpp" />
     <ClCompile Include="src\call_backs.cpp" />
+    <ClCompile Include="src\chapter1\2_hello_triangle\exercise_3.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\shader_class.cpp" />
     <ClCompile Include="src\utils.cpp" />
