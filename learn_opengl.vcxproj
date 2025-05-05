@@ -19,24 +19,25 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\call_backs.cpp" />
-    <ClCompile Include="src\chapter1\2_hello_triangle\exercise_3.cpp" />
+    <ClCompile Include="src\realize\call_backs.cpp" />
     <ClCompile Include="src\glad.c" />
-    <ClCompile Include="src\shader_class.cpp" />
-    <ClCompile Include="src\utils.cpp" />
+    <ClCompile Include="src\realize\set_uniform.cpp" />
+    <ClCompile Include="src\realize\shader_class.cpp" />
+    <ClCompile Include="src\realize\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\glad\glad.h" />
     <ClInclude Include="includes\GLFW\glfw3.h" />
     <ClInclude Include="includes\GLFW\glfw3native.h" />
     <ClInclude Include="includes\headers\call_backs.h" />
+    <ClInclude Include="includes\HEADER\set_uniform.hpp" />
     <ClInclude Include="includes\KHR\khrplatform.h" />
     <ClInclude Include="includes\learn_opengl\call_backs.h" />
     <ClInclude Include="includes\headers\shader_class.h" />
     <ClInclude Include="includes\learn_opengl\shader_class.h" />
     <ClInclude Include="includes\stb_image\stb_image.h" />
     <ClInclude Include="includes\HEADER\call_backs.hpp" />
-    <ClInclude Include="includes\HEADER\shader_class.h" />
+    <ClInclude Include="includes\HEADER\shader_class.hpp" />
     <ClInclude Include="includes\HEADER\utils.hpp" />
   </ItemGroup>
   <ItemGroup>
