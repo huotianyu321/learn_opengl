@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\chapter1\3_shader\exercise3.cpp" />
+    <ClCompile Include="src\chapter1\4_texture\1_use_texture.cpp" />
     <ClCompile Include="src\realize\call_backs.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\realize\set_uniform.cpp" />
@@ -53,8 +53,8 @@
     <Library Include="libs\glfw3.lib" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\chapter1\4_texture\1_shader_code.fragment" />
-    <None Include="src\chapter1\4_texture\1_shader_code.vertex" />
+    <None Include="src\chapter1\4_texture\1_code.fs" />
+    <None Include="src\chapter1\4_texture\1_code.vs" />
     <None Include="src\chapter1\4_texture\2_shader_code.fragment" />
     <None Include="src\chapter1\4_texture\exercise_1_shader_code.fragment" />
     <None Include="src\chapter1\4_texture\exercise_4_shader_code.fragment" />

@@ -90,4 +90,16 @@ unsigned int set_VAO_VBO_EBO_mutiple(
 	unsigned int offset[]
 );
 
+/*
+* 加载图片
+* 创建纹理
+*/
+unsigned int createTexture(
+	const char* imagePath, 
+	unsigned int wrapS, 
+	unsigned int wrapT, 
+	unsigned int magFilter, 
+	unsigned int minFilter
+);
+
 #endif // UTILS_H

@@ -1,6 +1,8 @@
 #include <HEADER/utils.hpp>
 #include <HEADER/call_backs.hpp>
 #include <iostream>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image/stb_image.h>
 
 GLFWwindow* initAndCreateWindow(int width, int height, const char* title) {
 	// 初始化函数，用于加载库并设置内部状态。
@@ -188,4 +190,42 @@ unsigned int set_VAO_VBO_EBO_mutiple(
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	return VAO;
+}
+
+unsigned int createTexture(
+	const char* imagePath, 
+	unsigned int wrapS, 
+	unsigned int wrapT, 
+	unsigned int magFilter, 
+	unsigned int minFilter
+) {
+	unsigned int texture;
+	// 创建纹理对象
+	glGenTextures(1, &texture); 
+	// 绑定到2d纹理, 之后对2D纹理所作的操作都会影响这个对象
+	glBindTexture(GL_TEXTURE_2D, texture); 
+
+	// 设置纹理的重复方式
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapS);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapT);
+
+	// 设置过滤方式
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
+
+	// 加载图片, 创建纹理图像  生成多级渐远纹理
+	int width, height, nrChannels;
+	unsigned char* imageData = stbi_load(imagePath, &width, &height, &nrChannels, 0);
+	if (imageData) {
+		// 根据图片生成纹理图像
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, imageData);
+		// 生成多级渐远纹理
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else {
+		std:: cout << "image load failed " << std::endl;
+	}
+	// 释放资源
+	stbi_image_free(imageData);
+	return texture;
 }
