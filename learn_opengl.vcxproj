@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\chapter1\3_shader\2_more_vertex_attribute.cpp" />
+    <ClCompile Include="src\chapter1\3_shader\exercise3.cpp" />
     <ClCompile Include="src\realize\call_backs.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\realize\set_uniform.cpp" />
@@ -42,12 +42,12 @@
     <ClInclude Include="includes\HEADER\utils.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="src\chapter1\3_shader\3_fragment_shader_code.txt" />
-    <Text Include="src\chapter1\3_shader\3_vertex_shader_code.txt" />
-    <Text Include="src\chapter1\3_shader\exercise1_vertex_shader.txt" />
-    <Text Include="src\chapter1\3_shader\exercise2_vertex_shader.txt" />
-    <Text Include="src\chapter1\3_shader\exercise3_fragment_shader.txt" />
-    <Text Include="src\chapter1\3_shader\exercise3_vertex_shader.txt" />
+    <Text Include="src\chapter1\3_shader\3_code.fs" />
+    <Text Include="src\chapter1\3_shader\3_code.vs" />
+    <Text Include="src\chapter1\3_shader\exercise1_code.vs" />
+    <Text Include="src\chapter1\3_shader\exercise2_code.vs" />
+    <Text Include="src\chapter1\3_shader\exercise3_code.fs" />
+    <Text Include="src\chapter1\3_shader\exercise3_code.vs" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="libs\glfw3.lib" />

@@ -76,6 +76,7 @@ int main()
     //glDeleteVertexArrays(1, &VAO);
     //glDeleteBuffers(1, &VBO);
     //glDeleteProgram(shaderProgram);
+
     glfwTerminate();
     return 0;
 }

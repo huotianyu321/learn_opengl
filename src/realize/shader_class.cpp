@@ -1,15 +1,30 @@
 // 这里把第一章第三节的着色器封装类拷贝了一份
 
 #include <HEADER/shader_class.hpp>
+#include <HEADER/utils.hpp>
+#include <HEADER/set_uniform.hpp>
 #include <fstream>
 #include <sstream>
 #include <iostream>
 
 // 构造函数实现
 Shader::Shader(const char* vertexPath, const char* fragmentPath) {
+
+	this->getShaderCodeFromFile(vertexPath, fragmentPath); // 获取着色器代码
+	std::cout << "vertexCode: " << this->vertexCode << std::endl;
+	std::cout << "fragmentCode: " << this->fragmentCode << std::endl;
+
+    const char* vertexCodeStr = this->vertexCode.c_str();
+    const char* fragmentCodeStr = this->fragmentCode.c_str();
+
+	unsigned vertexShaderID = createShader("VERTEX", vertexCodeStr);
+	unsigned fragmentShaderID = createShader("FRAGMENT", fragmentCodeStr);
+    this->ID = createShaderProgram(vertexShaderID, fragmentShaderID);
+}
+
+void Shader::getShaderCodeFromFile(const char* vertexPath, const char* fragmentPath)
+{
     // 1. 从文件提取着色器代码
-    std::string vertexCode;
-    std::string fragmentCode;
     std::ifstream vShaderFile;
     std::ifstream fShaderFile;
 
@@ -32,36 +47,12 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
         fShaderFile.close();
 
         // 将字符流转换为字符串
-        vertexCode = vShaderStream.str();
-        fragmentCode = fShaderStream.str();
+        this->vertexCode = vShaderStream.str();
+        this->fragmentCode = fShaderStream.str();
     }
     catch (std::ifstream::failure& e) {
-        std::cout << "着色器文件读取失败: " << e.what() << std::endl;
+        std::cout << "shader code file read failed: " << e.what() << std::endl;
     }
-
-    const char* vShaderCode = vertexCode.c_str();
-    const char* fShaderCode = fragmentCode.c_str();
-
-    // 2. 编译着色器, 链接着色器程序
-    unsigned int vertex, fragment;
-    vertex = glCreateShader(GL_VERTEX_SHADER); // 创建着色器对象
-    glShaderSource(vertex, 1, &vShaderCode, NULL);
-    glCompileShader(vertex);
-    this->checkCompileErrors(vertex, "VERTEX");
-
-    fragment = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment, 1, &fShaderCode, NULL);
-    glCompileShader(fragment);
-    this->checkCompileErrors(fragment, "FRAGMENT");
-
-    ID = glCreateProgram();
-    glAttachShader(ID, vertex);
-    glAttachShader(ID, fragment);
-    glLinkProgram(ID);
-    this->checkCompileErrors(ID, "PROGRAM");
-
-    glDeleteShader(vertex);
-    glDeleteShader(fragment);
 }
 
 // 使用着色器程序
@@ -79,11 +70,11 @@ void Shader::setInt(const std::string& name, int value) const {
 }
 
 void Shader::setFloat(const std::string& name, float value) const {
-    glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+	set1float(ID, name, value);
 }
 
 void Shader::set4Float(const std::string& name, float v1, float v2, float v3, float v4) const {
-    glUniform4f(glGetUniformLocation(ID, name.c_str()), v1, v2, v3, v4);
+	set4float(this->ID, name, v1, v2, v3, v4);
 }
 
 void Shader::setMat4(const std::string& name, const glm::mat4& mat) const

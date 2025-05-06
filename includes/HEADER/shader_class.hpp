@@ -27,6 +27,10 @@ public:
 
 private:
     unsigned int ID; // 着色器程序的 ID
+	std::string vertexCode = ""; // 顶点着色器代码
+	std::string fragmentCode = ""; // 片段着色器代码
+
+	void getShaderCodeFromFile(const char* vertexPath, const char* fragmentPath);
 
     // 检查编译或链接错误
     void checkCompileErrors(unsigned int shader, std::string type);

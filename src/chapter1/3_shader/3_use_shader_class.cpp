@@ -1,16 +1,16 @@
-// 使用uniform定义一个水平偏移量，在顶点着色器中使用这个偏移量把三角形移动到屏幕右侧
+// 将shader封装到一个类中
 
 #include <HEADER/utils.hpp>
 #include <HEADER/call_backs.hpp>
 #include <HEADER/shader_class.hpp>
 #include <iostream>
 
-const char* vertexCodePath = "./src/chapter1/3_shader/exercise2_code.vs";
+const char* vertexCodePath = "./src/chapter1/3_shader/3_code.vs";
 const char* fragmentCodePath = "./src/chapter1/3_shader/3_code.fs";
 
 int main()
 {
-	GLFWwindow* window = initAndCreateWindow(1800, 1200, "3-exercise2");
+	GLFWwindow* window = initAndCreateWindow(1800, 1200, "3.3 shader class");
 	if (NULL == window) {
 		glfwTerminate();
 		return -1;
@@ -47,10 +47,8 @@ int main()
 		jobAtRenderLoopStart(window);
 
 		myShader->use();
-		myShader->setFloat("xOffset", 1.0f); // 设置偏移量为0.5
-
-		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glBindVertexArray(VAO); 
+		glDrawArrays(GL_TRIANGLES, 0, 3); 
 
 		jobBeforRenderLoopEnd(window);
 	}
