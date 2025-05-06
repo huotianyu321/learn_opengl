@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\chapter1\3_shader\2_more_vertex_attribute.cpp" />
     <ClCompile Include="src\realize\call_backs.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\realize\set_uniform.cpp" />

@@ -6,11 +6,11 @@
 #include <string>
 
 /*
-*初始化、设置 OpenGL 版本和核心模式
-*创建窗口
-*设置当前上下文
-*初始化 GLAD
-*设置视口
+* 初始化、设置 OpenGL 版本和核心模式
+* 创建窗口
+* 设置当前上下文
+* 初始化 GLAD
+* 设置视口
 */
 GLFWwindow* initAndCreateWindow(int width, int height, const char* title);
 
@@ -64,6 +64,30 @@ unsigned int set_VAO_VBO_EBO(
 	unsigned int dimension,
 	unsigned int stride,
 	unsigned int offset
+);
+
+/*
+* 与上一个方法的区别：设置多个顶点属性
+* vertices 顶点数据
+* verticesSize 顶点数据数组的大小
+* indices 顶点索引数据
+* indicesSize 顶点索引数据数组的大小
+* count 顶点属性的数量
+* locationIndex 顶点着色器中的Location数组
+* dimension 维度数组，每个元素表示顶点属性的维度
+* stride 
+* offset 
+*/
+unsigned int set_VAO_VBO_EBO_mutiple(
+	float* vertices,
+	unsigned verticesSize,
+	unsigned int* indices,
+	unsigned int indicesSize,
+	unsigned int count,
+	unsigned int locationIndex[],
+	unsigned int dimension[],
+	unsigned int stride[],
+	unsigned int offset[]
 );
 
 #endif // UTILS_H

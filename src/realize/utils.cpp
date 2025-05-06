@@ -9,7 +9,7 @@ GLFWwindow* initAndCreateWindow(int width, int height, const char* title) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	// 使用核心模式（只是用OpenGL功能的子集，不需要向后兼容的特性）
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); 	
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);	// 需要向前兼容模式
 
 	// 创建窗口
@@ -50,10 +50,10 @@ void jobBeforRenderLoopEnd(GLFWwindow* window) {
 unsigned int createShader(const std::string shaderType, const char* shaderCode) {
 	unsigned int shaderID;
 
-	if (shaderType == "VERTEX") {
+	if (shaderType == "VERTEX" || shaderType == "vertex") {
 		shaderID = glCreateShader(GL_VERTEX_SHADER);
 	}
-	else if (shaderType == "FRAGMENT") {
+	else if (shaderType == "FRAGMENT" || shaderType == "fragment") {
 		shaderID = glCreateShader(GL_FRAGMENT_SHADER);
 	}
 
@@ -81,9 +81,9 @@ unsigned int createShaderProgram(unsigned int vertexShaderID, unsigned int fragm
 
 	glAttachShader(shaderProgramID, vertexShaderID);
 	// 前一个着色器的输出,必须与下一个着色器的输入相匹配
-	glAttachShader(shaderProgramID, fragmentShaderID); 
+	glAttachShader(shaderProgramID, fragmentShaderID);
 	// 链接着色器
-	glLinkProgram(shaderProgramID); 
+	glLinkProgram(shaderProgramID);
 
 	int isSuccess;
 	char infoLog[512];
@@ -98,7 +98,7 @@ unsigned int createShaderProgram(unsigned int vertexShaderID, unsigned int fragm
 	}
 
 	// 链接完成后就可以删除着色器了
-	glDeleteShader(vertexShaderID); 	
+	glDeleteShader(vertexShaderID);
 	glDeleteShader(fragmentShaderID);
 
 	return shaderProgramID;
@@ -122,14 +122,65 @@ unsigned int set_VAO_VBO_EBO(
 
 	glBindVertexArray(VAO);
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, verticesSize, vertices, GL_STATIC_DRAW); 	// 复制顶点数据
+	if (vertices != nullptr && verticesSize > 0) {
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, verticesSize, vertices, GL_STATIC_DRAW); 	// 复制顶点数据
 
-	glVertexAttribPointer(locationIndex, dimension, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void*)(offset * sizeof(float)));
-	glEnableVertexAttribArray(locationIndex);
+		glVertexAttribPointer(locationIndex, dimension, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void*)(offset * sizeof(float)));
+		glEnableVertexAttribArray(locationIndex);
+	}
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize, indices, GL_STATIC_DRAW);
+	if (indices != nullptr && indicesSize > 0) {
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize, indices, GL_STATIC_DRAW);
+	}
+
+	// 解绑
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	return VAO;
+}
+
+unsigned int set_VAO_VBO_EBO_mutiple(
+	float* vertices,
+	unsigned verticesSize,
+	unsigned int* indices,
+	unsigned int indicesSize,
+	unsigned int count,
+	unsigned int locationIndex[],
+	unsigned int dimension[],
+	unsigned int stride[],
+	unsigned int offset[]
+) {
+	unsigned int VAO, VBO, EBO;
+
+	glGenVertexArrays(1, &VAO); // 顶点数组对象VAO
+	glGenBuffers(1, &VBO); // 顶点缓冲对象
+	glGenBuffers(1, &EBO); // 元素缓冲对象
+
+	glBindVertexArray(VAO);
+
+	if (vertices != nullptr && verticesSize > 0) {
+
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, verticesSize, vertices, GL_STATIC_DRAW); 	// 复制顶点数据
+
+		for (unsigned int i = 0; i < count; ++i) {
+
+			glVertexAttribPointer(locationIndex[i], dimension[i], GL_FLOAT, GL_FALSE, stride[i] * sizeof(float), (void*)(offset[i] * sizeof(float)));
+			glEnableVertexAttribArray(locationIndex[i]);
+
+		}
+	}
+
+	if (indices != nullptr && indicesSize > 0) {
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize, indices, GL_STATIC_DRAW);
+
+	}
 
 	// 解绑
 	glBindVertexArray(0);
