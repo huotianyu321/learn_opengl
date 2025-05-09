@@ -7,10 +7,11 @@
 
 /*
 * 初始化、设置 OpenGL 版本和核心模式
-* 创建窗口
-* 设置当前上下文
-* 初始化 GLAD
-* 设置视口
+* 创建窗口, 设置当前上下文, 初始化 GLAD, 设置视口
+* @param width 窗口宽度
+* @param height 窗口高度
+* @param title 窗口标题
+* @return 窗口指针
 */
 GLFWwindow* initAndCreateWindow(int width, int height, const char* title);
 
@@ -30,30 +31,37 @@ void jobAtRenderLoopStart(GLFWwindow* window);
 void jobBeforRenderLoopEnd(GLFWwindow* window);
 
 /*
-* 创建着色器
-* 绑定着色器代码
-* 编译着色器
-* 校验是否成功
+* 创建着色器, 绑定着色器代码
+* 编译着色器, 校验是否成功
+* @param shaderType 着色器类型(vertex或fragment)
+* @param shaderCode 着色器代码
+* @return 着色器ID
 */
 unsigned int createShader(const std::string shaderType, const char* shaderCode);
 
 /*
-* 创建着色器程序
-* 添加着色器
-* 链接着色器程序
-* 校验
+* 创建着色器程序, 添加着色器
+* 链接着色器程序, 校验
+* @param vertexShaderID 顶点着色器ID
+* @param fragmentShaderID 片段着色器ID
+* @return 着色器程序ID
 */
 unsigned int createShaderProgram(unsigned int vertexShaderID, unsigned int fragmentShaderID);
 
 /*
-* vertices 顶点数据
-* verticesSize 顶点数据数组的大小
-* indices 顶点索引数据
-* indicesSize 顶点索引数据数组的大小
-* locationIndex 与顶点着色器中的Location对应
-* dimension 顶点数据的维度（有几个分量)
-* stride 顶点数据在数组中的跨度
-* offset 顶点数据在数组中的起始偏移量
+* 创建VAO, VBO, EBO
+* 绑定顶点数据，设置一个顶点属性
+* 绑定索引数据
+* 解绑VAO, VBO, EBO
+* @param vertices 顶点数据
+* @param verticesSize 顶点数据数组的大小
+* @param indices 顶点索引数据
+* @param indicesSize 顶点索引数据数组的大小
+* @param locationIndex 与顶点着色器中的Location对应
+* @param dimension 顶点数据的维度（有几个分量)
+* @param stride 顶点数据在数组中的跨度
+* @param offset 顶点数据在数组中的起始偏移量
+* @return VAO id
 */
 unsigned int set_VAO_VBO_EBO(
 	float* vertices,
@@ -67,16 +75,17 @@ unsigned int set_VAO_VBO_EBO(
 );
 
 /*
-* 与上一个方法的区别：设置多个顶点属性
-* vertices 顶点数据
-* verticesSize 顶点数据数组的大小
-* indices 顶点索引数据
-* indicesSize 顶点索引数据数组的大小
-* count 顶点属性的数量
-* locationIndex 顶点着色器中的Location数组
-* dimension 维度数组，每个元素表示顶点属性的维度
-* stride 
-* offset 
+* 与上一个方法的区别：设置一组顶点属性
+* @param vertices 顶点数据
+* @param verticesSize 顶点数据数组的大小
+* @param indices 顶点索引数据
+* @param indicesSize 顶点索引数据数组的大小
+* @param count 顶点属性的数量
+* @param locationIndex 顶点着色器中的Location数组
+* @param dimension 维度数组，每个元素表示顶点属性的维度
+* @param stride 跨度数组，每个元素表示顶点属性在数组中的跨度
+* @param offset 偏移量数组，每个元素表示顶点属性在数组中的起始偏移量
+* @return VAO id
 */
 unsigned int set_VAO_VBO_EBO_mutiple(
 	float* vertices,
@@ -91,15 +100,29 @@ unsigned int set_VAO_VBO_EBO_mutiple(
 );
 
 /*
-* 加载图片
-* 创建纹理
+* 1.加载图片 2.创建纹理
+* @param imagePath图片文件路径
+* @param wrapS 纹理水平环绕方式
+* @param wrapT 纹理垂直环绕方式
+* @param magFilter 纹理放大过滤方式
+* @param minFilter 纹理缩小过滤方式
+* @param alpha 是否有透明通道
+* @param flip 是否翻转图片
 */
 unsigned int createTexture(
 	const char* imagePath, 
 	unsigned int wrapS, 
 	unsigned int wrapT, 
 	unsigned int magFilter, 
-	unsigned int minFilter
+	unsigned int minFilter,
+	bool alpha,
+	bool flip
+);
+
+void doClearJob(
+	unsigned int* VAO,
+	unsigned int* VBO,
+	unsigned int* EBO
 );
 
 #endif // UTILS_H

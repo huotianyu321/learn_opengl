@@ -25,6 +25,12 @@ void set1float(
 	float v1
 );
 
+void set1int(
+	unsigned int shaderProgramID,
+	const std::string& uniformName,
+	int i
+);
+
 #endif // !SET_UNIFOTM_H
 
 

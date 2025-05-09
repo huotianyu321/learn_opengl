@@ -197,7 +197,9 @@ unsigned int createTexture(
 	unsigned int wrapS, 
 	unsigned int wrapT, 
 	unsigned int magFilter, 
-	unsigned int minFilter
+	unsigned int minFilter,
+	bool alpha,
+	bool flip
 ) {
 	unsigned int texture;
 	// 创建纹理对象
@@ -215,10 +217,12 @@ unsigned int createTexture(
 
 	// 加载图片, 创建纹理图像  生成多级渐远纹理
 	int width, height, nrChannels;
+	// 设置翻转图片
+	stbi_set_flip_vertically_on_load(flip);
 	unsigned char* imageData = stbi_load(imagePath, &width, &height, &nrChannels, 0);
 	if (imageData) {
 		// 根据图片生成纹理图像
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, imageData);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, alpha ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, imageData);
 		// 生成多级渐远纹理
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
@@ -228,4 +232,20 @@ unsigned int createTexture(
 	// 释放资源
 	stbi_image_free(imageData);
 	return texture;
+}
+
+void doClearJob(
+	unsigned int* VAO, 
+	unsigned int* VBO, 
+	unsigned int* EBO
+) {
+	if (VAO != nullptr) {
+		glDeleteVertexArrays(1, VAO);
+	}
+	if (VBO != nullptr) {
+		glDeleteBuffers(1, VBO);
+	}
+	if (EBO != nullptr) {
+		glDeleteBuffers(1, EBO);
+	}
 }

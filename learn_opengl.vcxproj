@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\chapter1\4_texture\1_use_texture.cpp" />
+    <ClCompile Include="src\chapter1\4_texture\exercise_4.cpp" />
     <ClCompile Include="src\realize\call_backs.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\realize\set_uniform.cpp" />
@@ -55,9 +55,9 @@
   <ItemGroup>
     <None Include="src\chapter1\4_texture\1_code.fs" />
     <None Include="src\chapter1\4_texture\1_code.vs" />
-    <None Include="src\chapter1\4_texture\2_shader_code.fragment" />
-    <None Include="src\chapter1\4_texture\exercise_1_shader_code.fragment" />
-    <None Include="src\chapter1\4_texture\exercise_4_shader_code.fragment" />
+    <None Include="src\chapter1\4_texture\2_code.fs" />
+    <None Include="src\chapter1\4_texture\exercise_1_code.fs" />
+    <None Include="src\chapter1\4_texture\exercise_4_code.fs" />
     <None Include="src\chapter1\5_transform\2_shader.fragment" />
     <None Include="src\chapter1\5_transform\2_shader.vertex" />
     <None Include="src\chapter1\6_coordinate_system\1_shader.fragment" />

@@ -30,3 +30,13 @@ void set1float(unsigned int shaderProgramID, const std::string& uniformName, flo
 	glUseProgram(shaderProgramID);
 	glUniform1f(location, v1);
 }
+
+void set1int(unsigned int shaderProgramID, const std::string& uniformName, int i) {
+	int location = glGetUniformLocation(shaderProgramID, uniformName.c_str());
+	if (location == -1) {
+		std::cout << "uniform: " << uniformName << " not found" << std::endl;
+		return;
+	}
+	glUseProgram(shaderProgramID);
+	glUniform1i(location, i);
+}

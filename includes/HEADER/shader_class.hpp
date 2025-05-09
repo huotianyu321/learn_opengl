@@ -12,6 +12,8 @@
 
 class Shader {
 public:
+    unsigned int ID; // 着色器程序的 ID
+
     // 构造函数：从顶点着色器和片段着色器文件路径创建着色器程序
     Shader(const char* vertexPath, const char* fragmentPath);
 
@@ -26,7 +28,6 @@ public:
     void setMat4(const std::string& name, const glm::mat4& mat) const;
 
 private:
-    unsigned int ID; // 着色器程序的 ID
 	std::string vertexCode = ""; // 顶点着色器代码
 	std::string fragmentCode = ""; // 片段着色器代码
 
