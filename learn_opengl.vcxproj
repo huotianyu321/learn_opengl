@@ -22,6 +22,7 @@
     <ClCompile Include="src\chapter1\4_texture\exercise_4.cpp" />
     <ClCompile Include="src\realize\call_backs.cpp" />
     <ClCompile Include="src\glad.c" />
+    <ClCompile Include="src\realize\process_events.cpp" />
     <ClCompile Include="src\realize\set_uniform.cpp" />
     <ClCompile Include="src\realize\shader_class.cpp" />
     <ClCompile Include="src\realize\utils.cpp" />
@@ -31,6 +32,7 @@
     <ClInclude Include="includes\GLFW\glfw3.h" />
     <ClInclude Include="includes\GLFW\glfw3native.h" />
     <ClInclude Include="includes\headers\call_backs.h" />
+    <ClInclude Include="includes\HEADER\process_events.hpp" />
     <ClInclude Include="includes\HEADER\set_uniform.hpp" />
     <ClInclude Include="includes\KHR\khrplatform.h" />
     <ClInclude Include="includes\learn_opengl\call_backs.h" />

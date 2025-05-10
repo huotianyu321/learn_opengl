@@ -6,6 +6,10 @@
 #include <string>
 
 /*
+* 该文件提供与opengl相关的一些内容的封装函数
+*/
+
+/*
 * 初始化、设置 OpenGL 版本和核心模式
 * 创建窗口, 设置当前上下文, 初始化 GLAD, 设置视口
 * @param width 窗口宽度
@@ -119,6 +123,9 @@ unsigned int createTexture(
 	bool flip
 );
 
+/*
+* 执行一些清理工作
+*/
 void doClearJob(
 	unsigned int* VAO,
 	unsigned int* VBO,

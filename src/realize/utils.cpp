@@ -1,5 +1,6 @@
 #include <HEADER/utils.hpp>
 #include <HEADER/call_backs.hpp>
+#include <HEADER/process_events.hpp>
 #include <iostream>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image/stb_image.h>

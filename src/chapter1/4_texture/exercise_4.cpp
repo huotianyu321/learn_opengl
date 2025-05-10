@@ -4,6 +4,7 @@
 #include <HEADER/call_backs.hpp>
 #include <HEADER/shader_class.hpp>
 #include <HEADER/set_uniform.hpp>
+#include <HEADER/process_events.hpp>
 
 #include <iostream>
 
@@ -75,18 +76,7 @@ int main() {
 	{
 		jobAtRenderLoopStart(window);
 
-		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-			number += 1;
-			if (number > 100.0f) {
-				number = 100.0f;
-			}
-		}
-		else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-			number -= 1;
-			if (number < 0.0f) {
-				number = 0.0f;
-			}
-		}
+		processUpDownKey(window, &number);
 
 		// 将纹理对象1绑定到纹理单元0上
 		glActiveTexture(GL_TEXTURE0);

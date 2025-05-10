@@ -13,6 +13,13 @@ int main() {
 	// 初始化一个单位矩阵
 	glm::mat4 trans; 
 
+	// 打印单位矩阵
+    	std::cout << trans[0][0] << trans[0][1] << trans[0][2] << trans[0][3] << std::endl;
+    	std::cout << trans[1][0] << trans[1][1] << trans[1][2] << trans[1][3] << std::endl;
+    	std::cout << trans[2][0] << trans[2][1] << trans[2][2] << trans[2][3] << std::endl;
+    	std::cout << trans[3][0] << trans[3][1] << trans[3][2] << trans[3][3] << std::endl;
+
+
 	// 定义一个vec4向量， 之后将这个向量位移（1，1，0）个单位
 	glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f); // 齐次坐标设置为1.0
 

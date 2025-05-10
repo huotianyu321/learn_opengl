@@ -11,8 +11,8 @@
 Shader::Shader(const char* vertexPath, const char* fragmentPath) {
 
 	this->getShaderCodeFromFile(vertexPath, fragmentPath); // 获取着色器代码
-	std::cout << "vertexCode: " << this->vertexCode << std::endl;
-	std::cout << "fragmentCode: " << this->fragmentCode << std::endl;
+	std::cout << "=============vertexCode: ===============\n" << this->vertexCode << std::endl;
+	std::cout << "=============fragmentCode: =============\n" << this->fragmentCode << std::endl;
 
     const char* vertexCodeStr = this->vertexCode.c_str();
     const char* fragmentCodeStr = this->fragmentCode.c_str();
