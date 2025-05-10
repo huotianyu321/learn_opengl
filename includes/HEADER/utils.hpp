@@ -3,6 +3,9 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <string>
 
 /*
@@ -127,9 +130,15 @@ unsigned int createTexture(
 * 执行一些清理工作
 */
 void doClearJob(
+	GLFWwindow* window,
 	unsigned int* VAO,
 	unsigned int* VBO,
 	unsigned int* EBO
 );
+
+/*
+* 打印矩阵
+*/
+void printMat4(const glm::mat4& mat);
 
 #endif // UTILS_H

@@ -62,11 +62,11 @@ void Shader::use() {
 
 // 设置 uniform 变量
 void Shader::setBool(const std::string& name, bool value) const {
-    glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
+    set1bool(this->ID, name, value);
 }
 
 void Shader::setInt(const std::string& name, int value) const {
-    glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+    set1int(this->ID, name, value);
 }
 
 void Shader::setFloat(const std::string& name, float value) const {
@@ -79,7 +79,7 @@ void Shader::set4Float(const std::string& name, float v1, float v2, float v3, fl
 
 void Shader::setMat4(const std::string& name, const glm::mat4& mat) const
 {
-	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat));
+    set1mat4(this->ID, name, mat);
 }
 
 // 检查编译或链接错误

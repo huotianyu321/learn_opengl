@@ -1,5 +1,4 @@
 #include <HEADER/utils.hpp>
-#include <HEADER/call_backs.hpp>
 #include <HEADER/process_events.hpp>
 #include <iostream>
 #define STB_IMAGE_IMPLEMENTATION
@@ -194,19 +193,19 @@ unsigned int set_VAO_VBO_EBO_mutiple(
 }
 
 unsigned int createTexture(
-	const char* imagePath, 
-	unsigned int wrapS, 
-	unsigned int wrapT, 
-	unsigned int magFilter, 
+	const char* imagePath,
+	unsigned int wrapS,
+	unsigned int wrapT,
+	unsigned int magFilter,
 	unsigned int minFilter,
 	bool alpha,
 	bool flip
 ) {
 	unsigned int texture;
 	// 创建纹理对象
-	glGenTextures(1, &texture); 
+	glGenTextures(1, &texture);
 	// 绑定到2d纹理, 之后对2D纹理所作的操作都会影响这个对象
-	glBindTexture(GL_TEXTURE_2D, texture); 
+	glBindTexture(GL_TEXTURE_2D, texture);
 
 	// 设置纹理的重复方式
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapS);
@@ -228,7 +227,7 @@ unsigned int createTexture(
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else {
-		std:: cout << "image load failed " << std::endl;
+		std::cout << "image load failed " << std::endl;
 	}
 	// 释放资源
 	stbi_image_free(imageData);
@@ -236,10 +235,15 @@ unsigned int createTexture(
 }
 
 void doClearJob(
-	unsigned int* VAO, 
-	unsigned int* VBO, 
+	GLFWwindow* window,
+	unsigned int* VAO,
+	unsigned int* VBO,
 	unsigned int* EBO
 ) {
+	if (window != nullptr) {
+		glfwDestroyWindow(window);
+	}
+
 	if (VAO != nullptr) {
 		glDeleteVertexArrays(1, VAO);
 	}
@@ -249,4 +253,13 @@ void doClearJob(
 	if (EBO != nullptr) {
 		glDeleteBuffers(1, EBO);
 	}
+}
+
+void printMat4(const glm::mat4& mat) {
+	std::cout << "=================================================\n";
+	std::cout << mat[0][0] << " " << mat[0][1] << " " << mat[0][2] << " " << mat[0][3] << std::endl;
+	std::cout << mat[1][0] << " " << mat[1][1] << " " << mat[1][2] << " " << mat[1][3] << std::endl;
+	std::cout << mat[2][0] << " " << mat[2][1] << " " << mat[2][2] << " " << mat[2][3] << std::endl;
+	std::cout << mat[3][0] << " " << mat[3][1] << " " << mat[3][2] << " " << mat[3][3] << std::endl;
+	std::cout << "=================================================\n";
 }
