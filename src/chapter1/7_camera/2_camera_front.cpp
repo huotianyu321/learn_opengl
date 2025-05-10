@@ -1,7 +1,12 @@
-// 相机环绕运动
-// lookAt矩阵glm::lookAt(相机位置, 目标位置, 世界上向量)
+// wasd控制, keybord事件
+// 体会一下定义cameraFront这个向量的便利
+// cameraFront向量所在的坐标系是相机的坐标系， 与相机坐标系的z轴相反向， 指向相机看向的位置
+// 通过相机的世界坐标cameraPos和cameraFront很容易计算出目标点的世界坐标(cameraPos+cameraFront)
+// 其次，通过cameraFront和worldUp可以计算出cameraRight
+// 这个练习中cameraFront始终是(0, 0, -1)，在相机坐标系中，相机始终看向着-z
+// 下个练习中，当相机的欧拉角变化时，可以通过欧拉角计算出cameraFront
 
-#define STB_IMAGE_IMPLEMENTATION
+// 注意worldUp是相机所在世界的上向量，不是相机坐标系的y轴正方向（当俯仰角变化时，相机坐标系的y轴正方向与worldUp不同）
 
 #include <HEADER/utils.hpp>
 #include <HEADER/call_backs.hpp>
@@ -16,11 +21,18 @@ const char* texture2_path = "./resources/awesomeface.png";
 const char* vertexCodePath = "./src/chapter1/6_coordinate_system/1_code.vs";
 const char* fragmentCodePath = "./src/chapter1/6_coordinate_system/1_code.fs";
 
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+float deltaTime = 0.0f; // 当前帧与上一帧的时间差
+float lastFrameTime = 0.0f; // 上一帧的时间
+
 int main() {
 	const int WIDTH = 1800;
 	const int HEIGHT = 1200;
 
-	GLFWwindow* window = initAndCreateWindow(WIDTH, HEIGHT, "6.1");
+	GLFWwindow* window = initAndCreateWindow(WIDTH, HEIGHT, "6.2");
 	if (window == nullptr) {
 		glfwTerminate();
 		return -1;
@@ -128,7 +140,13 @@ int main() {
 	jobBeforeEnterRenderLoop(window);
 	// 渲染循环
 	while (!glfwWindowShouldClose(window)) {
+		float t = glfwGetTime();
+		float currentFrameTime = t;
+		deltaTime = currentFrameTime - lastFrameTime;
+		lastFrameTime = currentFrameTime;
+
 		jobAtRenderLoopStart(window);
+		processWASD(window, deltaTime, cameraPos, cameraFront, worldUp);
 
 		// 绑定纹理
 		glActiveTexture(GL_TEXTURE0);
@@ -138,14 +156,13 @@ int main() {
 		// 激活着色器
 		ourShader.use();
 
-		float t = glfwGetTime();
-
 		// 创建观察矩阵
 		glm::mat4 view;
 		view = glm::lookAt(
-			glm::vec3(sin(t) * 10.0f, 0, cos(t) * 10.0f), // eye 相机/眼睛的位置
-			glm::vec3(0.0f, 0.0f, 0.0f),  // center 观察目标的位置
-			glm::vec3(0.0f, 1.0f, 0.0f) // worldUp向量
+			cameraPos, // eye
+			cameraPos + cameraFront, // center
+			//glm::vec3(cameraFront.x * 0.1, cameraFront.y * 0.1, cameraFront.z * 0.1), // 测试用
+			worldUp // worldup
 		);
 		ourShader.setMat4("view", view);
 
@@ -171,11 +188,7 @@ int main() {
 		jobBeforRenderLoopEnd(window);
 	}
 
-	glDeleteTextures(1, &texture1);
-	glDeleteTextures(1, &texture2);
-
-	doClearJob(window, &VAO, nullptr, nullptr);
+	// 执行清理工作
 	return 0;
 }
-
 

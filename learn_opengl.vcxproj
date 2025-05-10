@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\chapter1\6_coordinate_system\2_cube_depth_test.cpp" />
     <ClCompile Include="src\realize\call_backs.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\realize\process_events.cpp" />
@@ -42,6 +41,7 @@
     <ClInclude Include="includes\HEADER\call_backs.hpp" />
     <ClInclude Include="includes\HEADER\shader_class.hpp" />
     <ClInclude Include="includes\HEADER\utils.hpp" />
+    <ClInclude Include="includes\HEADER\camera_class.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\chapter1\3_shader\3_code.fs" />

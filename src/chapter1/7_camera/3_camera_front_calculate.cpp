@@ -1,5 +1,14 @@
-// 相机环绕运动
-// lookAt矩阵glm::lookAt(相机位置, 目标位置, 世界上向量)
+// 通过欧拉角来计算相机的朝向cameraFront向量
+/*
+* glm::vec3 front; // 相机朝向向量
+* front.y = sin(glm::radians(pitch));
+* front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+* front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+* cameraFront = glm::normalize(front); // 归一化
+*/
+// 这个例子只设计俯仰角和偏航角，不涉及滚转角
+
+// glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);这个方法有bug
 
 #define STB_IMAGE_IMPLEMENTATION
 
@@ -11,21 +20,41 @@
 
 #include <iostream>
 
+const int WIDTH = 1800;
+const int HEIGHT = 1200;
 const char* texture1_path = "./resources/container.jpg";
 const char* texture2_path = "./resources/awesomeface.png";
 const char* vertexCodePath = "./src/chapter1/6_coordinate_system/1_code.vs";
 const char* fragmentCodePath = "./src/chapter1/6_coordinate_system/1_code.fs";
 
-int main() {
-	const int WIDTH = 1800;
-	const int HEIGHT = 1200;
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
-	GLFWwindow* window = initAndCreateWindow(WIDTH, HEIGHT, "6.1");
+float yaw = -90.0f; // 偏航角, 一开始是看向-z轴的
+float pitch = 0.0f; // 俯仰角, 一开始是水平的
+float fov = 45.0f; // 视野角度
+
+float lastX = WIDTH / 2; // 记录上一帧鼠标位置. 初始设置为窗口中心，因为一开始相机的俯仰角和偏航角为0
+float lastY = HEIGHT / 2; 
+bool mouseControlActive = false; // 当鼠标移到窗口中心再激活
+float sensitivity = 0.05f; // 鼠标灵敏度
+
+float deltaTime = 0.0f; // 当前帧与上一帧的时间差
+float lastFrameTime = 0.0f; // 上一帧的时间
+
+void mouse_move_cb(GLFWwindow* window, double xposIn, double yposIn);
+void mouse_scroll_cb(GLFWwindow* window, double xoffset, double yoffset);
+
+int main() {
+	GLFWwindow* window = initAndCreateWindow(WIDTH, HEIGHT, "6.2");
 	if (window == nullptr) {
 		glfwTerminate();
 		return -1;
 	}
 	glfwSetFramebufferSizeCallback(window, framebufferSizeChangeCallback);
+	glfwSetScrollCallback(window, mouse_scroll_cb);
+	glfwSetCursorPosCallback(window, mouse_move_cb);
 
 	// 立方体的顶点， 每个面两个三角形，每个三角形3个顶点 6 * 2 * 3
 	float vertices[] = {
@@ -119,16 +148,17 @@ int main() {
 		glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
 
-	// 投影矩阵其实很少发生变化, 一般在窗口大小改变时才会改变, 可以不在每帧都传递
-	glm::mat4 projection;
-	projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f); // 透视投影
-	ourShader.setMat4("projection", projection); // 透视投影矩阵
-
 	// 开启深度测试， 如果不开启，可以看到立方体在旋转过程中穿模
 	jobBeforeEnterRenderLoop(window);
 	// 渲染循环
 	while (!glfwWindowShouldClose(window)) {
+		float t = glfwGetTime();
+		float currentFrameTime = t;
+		deltaTime = currentFrameTime - lastFrameTime;
+		lastFrameTime = currentFrameTime;
+
 		jobAtRenderLoopStart(window);
+		processWASD(window, deltaTime, cameraPos, cameraFront, worldUp);
 
 		// 绑定纹理
 		glActiveTexture(GL_TEXTURE0);
@@ -138,14 +168,16 @@ int main() {
 		// 激活着色器
 		ourShader.use();
 
-		float t = glfwGetTime();
+		glm::mat4 projection;
+		projection = glm::perspective(glm::radians(fov), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f); // 透视投影
+		ourShader.setMat4("projection", projection); // 透视投影矩阵
 
 		// 创建观察矩阵
 		glm::mat4 view;
 		view = glm::lookAt(
-			glm::vec3(sin(t) * 10.0f, 0, cos(t) * 10.0f), // eye 相机/眼睛的位置
-			glm::vec3(0.0f, 0.0f, 0.0f),  // center 观察目标的位置
-			glm::vec3(0.0f, 1.0f, 0.0f) // worldUp向量
+			cameraPos, // eye
+			cameraPos + cameraFront, // center
+			worldUp // wroldup
 		);
 		ourShader.setMat4("view", view);
 
@@ -171,11 +203,72 @@ int main() {
 		jobBeforRenderLoopEnd(window);
 	}
 
-	glDeleteTextures(1, &texture1);
-	glDeleteTextures(1, &texture2);
-
-	doClearJob(window, &VAO, nullptr, nullptr);
+	// 清理工作....
 	return 0;
 }
 
 
+void mouse_move_cb(GLFWwindow* window, double xPosIn, double yPosIn) {
+	// 当前帧的鼠标位置
+	float xPos = static_cast<float>(xPosIn);
+	float yPos = static_cast<float>(yPosIn);
+	std::cout << "X: " << xPos << " Y: " << yPos << std::endl;
+
+	// 让鼠标从外边移动到中心再激活控制
+	if (
+		!mouseControlActive 
+		&& xPos >= WIDTH / 2 - 10
+		&& xPos <= WIDTH / 2 + 10
+		&& yPos >= HEIGHT / 2 - 10
+		&& yPos <= HEIGHT / 2 + 10
+	) {
+		mouseControlActive = true; // 鼠标移到窗口中心时激活
+		lastX = xPos;
+		lastY = yPos;
+	}
+	
+	if (!mouseControlActive) {
+		return; 
+	}
+
+	// 计算鼠标移动的距离
+	float xOffset = xPos - lastX;
+	// 反向y轴，屏幕坐标系是以左上角为原点的. 
+	// 当鼠标向下移动时，y坐标增大，但此时俯仰角应该减小
+	float yOffset = lastY - yPos; 
+
+	// 更新上一帧鼠标位置
+	lastX = xPos; 
+	lastY = yPos;
+
+	yaw += xOffset * sensitivity; // 更新偏航角
+	pitch += yOffset * sensitivity; // 更新俯仰角
+
+	// 限制俯仰角上下不超过90°
+	if (pitch > 89.0f) {
+		pitch = 89.0f;
+	}
+	if (pitch < -89.0f) {
+		pitch = -89.0f;
+	}
+
+	glm::vec3 front; // 相机朝向向量
+	front.y = sin(glm::radians(pitch)); 
+	front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch)); 
+	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch)); 
+	cameraFront = glm::normalize(front); // 归一化
+}
+
+
+void mouse_scroll_cb(GLFWwindow* window, double xoffset, double yoffset) {
+	float xOffset = static_cast<float>(xoffset);
+	float yOffset = static_cast<float>(yoffset);
+	std::cout << "X: " << xOffset << " Y: " << yOffset << std::endl;
+	fov += yOffset;
+	if (fov < 1.0f) {
+		fov = 1.0f;
+	}
+	if (fov > 45.0f) {
+		fov = 45.0f;
+	}
+}

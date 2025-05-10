@@ -4,8 +4,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-
-#include "exercise2_my_lookAt.h"
+#include <iostream>
 
 // 摄像机移动方向
 enum Camera_Movement {
@@ -25,9 +24,9 @@ const float ZOOM = 45.0f; // 缩放比例
 class Camera {
 public:
 	glm::vec3 Position; // 摄像机位置
-	glm::vec3 Front; // 摄像机朝向
-	glm::vec3 Up; // 摄像机上方向
-	glm::vec3 Right; // 摄像机右方向
+	glm::vec3 Front; // 前向量：摄像机朝向，摄像机坐标系z轴负方向
+	glm::vec3 Up; // 上向量：摄像机坐标系y轴正方向
+	glm::vec3 Right; // 右向量：摄像机坐标系x轴正方向
 	glm::vec3 WorldUp; // 世界坐标系的上方向
 	float Yaw; // 偏航角
 	float Pitch; // 俯仰角
@@ -37,17 +36,17 @@ public:
 
 	// 构造函数1
 	Camera(
-		glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), 
-		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), 
-		float yaw = YAW, 
+		glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3 worldUp = glm::vec3(0.0f, 1.0f, 0.0f),
+		float yaw = YAW,
 		float pitch = PITCH
-	):	Front(glm::vec3(0.0f, 0.0f, -1.0f)),
-		MovementSpeed(SPEED), 
-		MouseSensitivity(SENSITIVITY), 
-		Zoom(ZOOM) 
+	) : Front(glm::vec3(0.0f, 0.0f, -1.0f)),
+		MovementSpeed(SPEED),
+		MouseSensitivity(SENSITIVITY),
+		Zoom(ZOOM)
 	{
 		Position = position;
-		WorldUp = up;
+		WorldUp = worldUp;
 		Yaw = yaw;
 		Pitch = pitch;
 		updateCameraVectors();
@@ -74,7 +73,7 @@ public:
 	* 获取相机的观察矩阵
 	*/
 	glm::mat4 GetViewMatrix() {
-		return glm::lookAt(Position, Position + Front, Up);
+		return glm::lookAt(Position, Position + Front, WorldUp);
 	}
 
 
@@ -104,8 +103,9 @@ public:
 		}
 		updateCameraVectors();
 	}
+
 	void ProcessMouseScroll(float yoffset) {
-		Zoom -= (float)yoffset;
+		Zoom -= yoffset;
 		if (Zoom < 1.0f) {
 			Zoom = 1.0f;
 		}

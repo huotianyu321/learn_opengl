@@ -76,6 +76,8 @@ void doClearJob(
 	}
 	// 纹理
 	// glDeleteTextures(1, &texture1);
+
+	glfwTerminate();
 }
 
 unsigned int createShader(const std::string shaderType, const char* shaderCode) {
