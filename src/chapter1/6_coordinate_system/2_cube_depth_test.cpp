@@ -1,50 +1,33 @@
-// 更加3d: 立方体
+// 更多3d: 立方体
 // 深度测试
 
 #define STB_IMAGE_IMPLEMENTATION
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <stb_image/stb_image.h>
+#include <HEADER/utils.hpp>
+#include <HEADER/call_backs.hpp>
+#include <HEADER/shader_class.hpp>
+#include <HEADER/set_uniform.hpp>
+#include <HEADER/process_events.hpp>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include <learn_opengl/shader_class.h>
-#include <learn_opengl/call_backs.h>
-
-const unsigned int WIDTH = 800;
-const unsigned int HEIGHT = 600;
+#include <iostream>
 
 const char* texture1_path = "./resources/container.jpg";
 const char* texture2_path = "./resources/awesomeface.png";
-const char* vertexCodePath = "./src/chapter1/6_coordinate_system/1_shader.vertex";
-const char* fragmentCodePath = "./src/chapter1/6_coordinate_system/1_shader.fragment";
+const char* vertexCodePath = "./src/chapter1/6_coordinate_system/1_code.vs";
+const char* fragmentCodePath = "./src/chapter1/6_coordinate_system/1_code.fs";
 
 int main() {
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	const int WIDTH = 1800;
+	const int HEIGHT = 1200;
 
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "COORDINATE SYSTEM", NULL, NULL);
-	if (window == NULL) {
-		std::cout << "创建窗口失败" << std::endl;
+	GLFWwindow* window = initAndCreateWindow(WIDTH, HEIGHT, "6.1");
+	if (window == nullptr) {
 		glfwTerminate();
 		return -1;
 	}
-	// 设置窗口的上下文
-	glfwMakeContextCurrent(window);
-	// 绑定窗口大小改变的回调函数
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetFramebufferSizeCallback(window, framebufferSizeChangeCallback);
 
-	// 初始化GLAD 
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-		std::cout << "加载GLAD失败" << std::endl;
-		return -1;
-	}
-
+	// 立方体的顶点， 每个面两个三角形，每个三角形3个顶点 6 * 2 * 3
 	float vertices[] = {
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
@@ -89,64 +72,31 @@ int main() {
 		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 	};
 
-	// VAO, VBO
-	unsigned int VAO, VBO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
+	unsigned int location[] = { 0, 1 };
+	unsigned int dimension[] = { 3, 2 };
+	unsigned int stride[] = { 5, 5 };
+	unsigned int offset[] = { 0, 3 };
+	unsigned int VAO = set_VAO_VBO_EBO_mutiple(
+		vertices, sizeof(vertices), nullptr, 0,
+		3, location, dimension, stride, offset
+	);
 
-	glBindVertexArray(VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	// texture
-	unsigned int texture1, texture2;
 	// 第一个纹理
-	glGenTextures(1, &texture1);
-	glBindTexture(GL_TEXTURE_2D, texture1);
-	// 设置纹理环绕方式
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	// 设置纹理过滤方式
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	// 加载纹理图片,生成纹理并创建多级渐远纹理
-	int width, height, nrChannels;
-	//stbi_set_flip_vertically_on_load(true); // 翻转y轴
-	unsigned char* data = stbi_load(texture1_path, &width, &height, &nrChannels, 0);
-	if (data) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else {
-		std::cout << "纹理加载失败" << std::endl;
-	}
-	stbi_image_free(data);
-
+	unsigned int texture1 = createTexture(
+		texture1_path,
+		GL_REPEAT, GL_REPEAT,
+		GL_LINEAR, GL_LINEAR,
+		false,
+		false
+	);
 	// 第二个纹理
-	glGenTextures(1, &texture2);
-	glBindTexture(GL_TEXTURE_2D, texture2);
-	// 设置纹理环绕方式
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	// 设置纹理过滤方式
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	// 加载纹理图片, 生成纹理并创建多级渐远纹理
-	unsigned char* data2 = stbi_load(texture2_path, &width, &height, &nrChannels, 0);
-	if (data2) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data2);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else {
-		std::cout << "纹理加载失败" << std::endl;
-	}
-	stbi_image_free(data2);
+	unsigned int texture2 = createTexture(
+		texture2_path,
+		GL_MIRRORED_REPEAT, GL_REPEAT,
+		GL_LINEAR, GL_LINEAR,
+		true,
+		true
+	);
 
 	// 着色器
 	Shader ourShader(vertexCodePath, fragmentCodePath);
@@ -169,18 +119,11 @@ int main() {
 		glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
 
-	// 开启深度测试
-	glEnable(GL_DEPTH_TEST); 
+	// 开启深度测试， 如果不开启，可以看到立方体在旋转过程中穿模
+	jobBeforeEnterRenderLoop(window);
 	// 渲染循环
 	while (!glfwWindowShouldClose(window)) {
-		processInupt(window);
-
-		// 清除颜色缓冲区
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		// =====清除深度缓冲区====
-		glClear(GL_DEPTH_BUFFER_BIT);
+		jobAtRenderLoopStart(window); // 清除深度缓冲
 
 		// 绑定纹理
 		glActiveTexture(GL_TEXTURE0);
@@ -192,14 +135,13 @@ int main() {
 
 		// 创建变换矩阵
 		glm::mat4 view;
-		glm::mat4 projection;
 		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f)); // 沿z轴负平移(模拟相机沿z轴正方向平移)
+		ourShader.setMat4("view", view);
+
+		glm::mat4 projection;
 		projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f); // 透视投影
-		unsigned int viewLoc = glGetUniformLocation(ourShader.ID, "view");
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
-		// 投影矩阵其实很少发生变化, 一般在窗口大小改变时才会改变, 可以不在每帧都传递
-		ourShader.setMat4("projection", projection); // 透视投影矩阵
-		
+		ourShader.setMat4("projection", projection);
+
 		// 通过模型矩阵在循环中改变立方体的位置(使用相同的顶点数据)
 		for (unsigned int i = 0; i < 10; ++i) {
 			glm::mat4 model;
@@ -208,38 +150,27 @@ int main() {
 			model = glm::translate(model, cubePositions[i]); // 平移
 			float angle = 20.0f * i; // 旋转角度 // 随时间旋转
 			model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-			//
 
 			// 试试这组
 			//float angle = 20.0f * i; // 旋转角度 // 随时间旋转
 			//model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 			//model = glm::translate(model, cubePositions[i]); // 平移
-			//
 
+			ourShader.setMat4("model", model);
 
-			// 传递变换矩阵到着色器
-			unsigned int modelLoc = glGetUniformLocation(ourShader.ID, "model");
-			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
-			// 绘制矩形
+			// 绘制立方体
 			glBindVertexArray(VAO);
-			glDrawArrays(GL_TRIANGLES, 0, 36); // 绘制立方体
+			glDrawArrays(GL_TRIANGLES, 0, 36); 
 		}
 
-		// 交换缓冲区, 处理事件
-		glfwSwapBuffers(window);
-		glfwPollEvents();
+		jobBeforRenderLoopEnd(window);
 	}
 
 	glDisable(GL_DEPTH_TEST); // 关闭深度测试
-
-	glDeleteBuffers(1, &VBO);
-	glDeleteVertexArrays(1, &VAO);
-
+	doClearJob(window, &VAO, nullptr, nullptr); // 关闭了深度缓冲
 	glDeleteTextures(1, &texture1);
 	glDeleteTextures(1, &texture2);
 
-	glfwDestroyWindow(window);
 	glfwTerminate();
 	return 0;
 }

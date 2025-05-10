@@ -23,6 +23,11 @@
 GLFWwindow* initAndCreateWindow(int width, int height, const char* title);
 
 /*
+* 在进入渲染循环前做些什么
+*/
+void jobBeforeEnterRenderLoop(GLFWwindow* window);
+
+/*
 * 在渲染循环开始时调用的函数
 * 设置清屏颜色
 * 设置要清除的缓冲区
@@ -36,6 +41,16 @@ void jobAtRenderLoopStart(GLFWwindow* window);
 * 交换前后缓冲区
 */
 void jobBeforRenderLoopEnd(GLFWwindow* window);
+
+/*
+* 执行一些清理工作
+*/
+void doClearJob(
+	GLFWwindow* window,
+	unsigned int* VAO,
+	unsigned int* VBO,
+	unsigned int* EBO
+);
 
 /*
 * 创建着色器, 绑定着色器代码
@@ -124,16 +139,6 @@ unsigned int createTexture(
 	unsigned int minFilter,
 	bool alpha,
 	bool flip
-);
-
-/*
-* 执行一些清理工作
-*/
-void doClearJob(
-	GLFWwindow* window,
-	unsigned int* VAO,
-	unsigned int* VBO,
-	unsigned int* EBO
 );
 
 /*

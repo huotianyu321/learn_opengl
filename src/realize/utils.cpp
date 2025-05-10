@@ -36,9 +36,13 @@ GLFWwindow* initAndCreateWindow(int width, int height, const char* title) {
 	return window;
 }
 
+void jobBeforeEnterRenderLoop(GLFWwindow* window) {
+	glEnable(GL_DEPTH_TEST);
+}
+
 void jobAtRenderLoopStart(GLFWwindow* window) {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// 先调用glfwPollEvents()，处理所有的事件（比如键盘、鼠标、窗口大小变化等）
 	glfwPollEvents();
 	// 然后调用processEscapeKey()函数检查ESCAPE键是否按下。
@@ -47,6 +51,31 @@ void jobAtRenderLoopStart(GLFWwindow* window) {
 
 void jobBeforRenderLoopEnd(GLFWwindow* window) {
 	glfwSwapBuffers(window);
+}
+
+void doClearJob(
+	GLFWwindow* window,
+	unsigned int* VAO,
+	unsigned int* VBO,
+	unsigned int* EBO
+) {
+	glDisable(GL_DEPTH_TEST);
+
+	if (VAO != nullptr) {
+		glDeleteVertexArrays(1, VAO);
+	}
+	if (VBO != nullptr) {
+		glDeleteBuffers(1, VBO);
+	}
+	if (EBO != nullptr) {
+		glDeleteBuffers(1, EBO);
+	}
+
+	if (window != nullptr) {
+		glfwDestroyWindow(window);
+	}
+	// 纹理
+	// glDeleteTextures(1, &texture1);
 }
 
 unsigned int createShader(const std::string shaderType, const char* shaderCode) {
@@ -232,27 +261,6 @@ unsigned int createTexture(
 	// 释放资源
 	stbi_image_free(imageData);
 	return texture;
-}
-
-void doClearJob(
-	GLFWwindow* window,
-	unsigned int* VAO,
-	unsigned int* VBO,
-	unsigned int* EBO
-) {
-	if (window != nullptr) {
-		glfwDestroyWindow(window);
-	}
-
-	if (VAO != nullptr) {
-		glDeleteVertexArrays(1, VAO);
-	}
-	if (VBO != nullptr) {
-		glDeleteBuffers(1, VBO);
-	}
-	if (EBO != nullptr) {
-		glDeleteBuffers(1, EBO);
-	}
 }
 
 void printMat4(const glm::mat4& mat) {

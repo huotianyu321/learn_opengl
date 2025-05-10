@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\chapter1\5_transform\exercise_2.cpp" />
+    <ClCompile Include="src\chapter1\6_coordinate_system\2_cube_depth_test.cpp" />
     <ClCompile Include="src\realize\call_backs.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\realize\process_events.cpp" />
@@ -62,8 +62,8 @@
     <None Include="src\chapter1\4_texture\exercise_4_code.fs" />
     <None Include="src\chapter1\5_transform\2_code.fs" />
     <None Include="src\chapter1\5_transform\2_code.vs" />
-    <None Include="src\chapter1\6_coordinate_system\1_shader.fragment" />
-    <None Include="src\chapter1\6_coordinate_system\1_shader.vertex" />
+    <None Include="src\chapter1\6_coordinate_system\1_code.fs" />
+    <None Include="src\chapter1\6_coordinate_system\1_code.vs" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\awesomeface.png" />
