@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\realize\call_backs.cpp" />
+    <ClCompile Include="src\chapter2_light\1_color\1.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\realize\process_events.cpp" />
     <ClCompile Include="src\realize\set_uniform.cpp" />
@@ -38,7 +38,6 @@
     <ClInclude Include="includes\headers\shader_class.h" />
     <ClInclude Include="includes\learn_opengl\shader_class.h" />
     <ClInclude Include="includes\stb_image\stb_image.h" />
-    <ClInclude Include="includes\HEADER\call_backs.hpp" />
     <ClInclude Include="includes\HEADER\shader_class.hpp" />
     <ClInclude Include="includes\HEADER\utils.hpp" />
     <ClInclude Include="includes\HEADER\camera_class.hpp" />
@@ -64,6 +63,9 @@
     <None Include="src\chapter1\5_transform\2_code.vs" />
     <None Include="src\chapter1\6_coordinate_system\1_code.fs" />
     <None Include="src\chapter1\6_coordinate_system\1_code.vs" />
+    <None Include="src\chapter2_light\1_color\1_code.vs" />
+    <None Include="src\chapter2_light\1_color\1_code_box.fs" />
+    <None Include="src\chapter2_light\1_color\1_code_light.fs" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\awesomeface.png" />

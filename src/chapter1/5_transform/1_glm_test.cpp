@@ -13,6 +13,9 @@ int main() {
 
 	printMat4(trans);
 
+	glm::mat4 test(2.0f);
+	printMat4(test);
+
 
 	// 定义一个vec4向量， 之后将这个向量位移（1，1，0）个单位
 	glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f); // 齐次坐标设置为1.0

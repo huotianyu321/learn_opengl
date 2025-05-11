@@ -5,6 +5,23 @@ int findUniform(unsigned int shaderProgramID, const std::string& uniformName) {
 	return glGetUniformLocation(shaderProgramID, uniformName.c_str());
 }
 
+void set3float(
+	unsigned int shaderProgramID,
+	const std::string& uniformName,
+	float v1,
+	float v2,
+	float v3
+) {
+	int location = findUniform(shaderProgramID, uniformName);
+	if (location == -1) {
+		std::cout << "uniform: " << uniformName << " not found" << std::endl;
+		return;
+	}
+
+	glUseProgram(shaderProgramID);
+	glUniform3f(location, v1, v2, v3);
+}
+
 
 void set4float(
 	unsigned int shaderProgramID,

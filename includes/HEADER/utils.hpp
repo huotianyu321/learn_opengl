@@ -8,6 +8,12 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <string>
 
+struct VAOData {
+	unsigned int VAO;
+	unsigned int VBO;
+	unsigned int EBO;
+};
+
 /*
 * 该文件提供与opengl相关的一些内容的封装函数
 */
@@ -43,16 +49,6 @@ void jobAtRenderLoopStart(GLFWwindow* window);
 void jobBeforRenderLoopEnd(GLFWwindow* window);
 
 /*
-* 执行一些清理工作
-*/
-void doClearJob(
-	GLFWwindow* window,
-	unsigned int* VAO,
-	unsigned int* VBO,
-	unsigned int* EBO
-);
-
-/*
 * 创建着色器, 绑定着色器代码
 * 编译着色器, 校验是否成功
 * @param shaderType 着色器类型(vertex或fragment)
@@ -85,7 +81,8 @@ unsigned int createShaderProgram(unsigned int vertexShaderID, unsigned int fragm
 * @param offset 顶点数据在数组中的起始偏移量
 * @return VAO id
 */
-unsigned int set_VAO_VBO_EBO(
+
+VAOData set_VAO_VBO_EBO(
 	float* vertices,
 	unsigned verticesSize,
 	unsigned int* indices,
@@ -109,7 +106,7 @@ unsigned int set_VAO_VBO_EBO(
 * @param offset 偏移量数组，每个元素表示顶点属性在数组中的起始偏移量
 * @return VAO id
 */
-unsigned int set_VAO_VBO_EBO_mutiple(
+VAOData set_VAO_VBO_EBO_mutiple(
 	float* vertices,
 	unsigned verticesSize,
 	unsigned int* indices,

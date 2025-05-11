@@ -53,33 +53,6 @@ void jobBeforRenderLoopEnd(GLFWwindow* window) {
 	glfwSwapBuffers(window);
 }
 
-void doClearJob(
-	GLFWwindow* window,
-	unsigned int* VAO,
-	unsigned int* VBO,
-	unsigned int* EBO
-) {
-	glDisable(GL_DEPTH_TEST);
-
-	if (VAO != nullptr) {
-		glDeleteVertexArrays(1, VAO);
-	}
-	if (VBO != nullptr) {
-		glDeleteBuffers(1, VBO);
-	}
-	if (EBO != nullptr) {
-		glDeleteBuffers(1, EBO);
-	}
-
-	if (window != nullptr) {
-		glfwDestroyWindow(window);
-	}
-	// 纹理
-	// glDeleteTextures(1, &texture1);
-
-	glfwTerminate();
-}
-
 unsigned int createShader(const std::string shaderType, const char* shaderCode) {
 	unsigned int shaderID;
 
@@ -137,7 +110,7 @@ unsigned int createShaderProgram(unsigned int vertexShaderID, unsigned int fragm
 	return shaderProgramID;
 }
 
-unsigned int set_VAO_VBO_EBO(
+VAOData set_VAO_VBO_EBO(
 	float* vertices,
 	unsigned verticesSize,
 	unsigned int* indices,
@@ -173,10 +146,10 @@ unsigned int set_VAO_VBO_EBO(
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	return VAO;
+	return { VAO, VBO, EBO };
 }
 
-unsigned int set_VAO_VBO_EBO_mutiple(
+VAOData set_VAO_VBO_EBO_mutiple(
 	float* vertices,
 	unsigned verticesSize,
 	unsigned int* indices,
@@ -220,7 +193,7 @@ unsigned int set_VAO_VBO_EBO_mutiple(
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	return VAO;
+	return { VAO, VBO, EBO };
 }
 
 unsigned int createTexture(

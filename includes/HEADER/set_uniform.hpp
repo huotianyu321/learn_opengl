@@ -18,6 +18,14 @@ int findUniform(unsigned int shaderProgramID, const std::string& uniformName);
 * 设置各种类型uniform变量的值
 * 在设置uniform变量之前，必须先使用glUseProgram()函数激活着色器程序
 */
+void set3float(
+	unsigned int shaderProgramID,
+	const std::string& uniformName,
+	float v1,
+	float v2,
+	float v3
+);
+
 void set4float(
 	unsigned int shaderProgramID,
 	const std::string& uniformName,

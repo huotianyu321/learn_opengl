@@ -1,7 +1,6 @@
 // 使用相机类
 
 #include <HEADER/utils.hpp>
-#include <HEADER/call_backs.hpp>
 #include <HEADER/shader_class.hpp>
 #include <HEADER/set_uniform.hpp>
 #include <HEADER/process_events.hpp>
@@ -16,34 +15,34 @@ const char* texture2_path = "./resources/awesomeface.png";
 const char* vertexCodePath = "./src/chapter1/6_coordinate_system/1_code.vs";
 const char* fragmentCodePath = "./src/chapter1/6_coordinate_system/1_code.fs";
 
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f); // 初始相机位置
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f); // 初始相机朝向
-glm::vec3 worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+Camera camera = Camera(
+	glm::vec3(0.0f, 0.0f, 3.0f), 
+	glm::vec3(0.0f, 1.0f, 0.0f),
+	-90.0f, 
+	0.0f
+);
 
-float yaw = -90.0f; // 偏航角, 一开始是看向-z轴的
-float pitch = 0.0f; // 俯仰角, 一开始是水平的
-
-Camera camera = Camera(cameraPos, worldUp, yaw, pitch);
-
-float lastX = WIDTH / 2; // 记录上一帧鼠标位置. 初始设置为窗口中心，因为一开始相机的俯仰角和偏航角为0
-float lastY = HEIGHT / 2;
-bool mouseControlActive = false; // 当鼠标移到窗口中心再激活
-
+float lastX = 0; // 上一帧鼠标位置
+float lastY = 0;
 float deltaTime = 0.0f; // 当前帧与上一帧的时间差
 float lastFrameTime = 0.0f; // 上一帧的时间
+bool mouseControlActive = false; // 当鼠标移到窗口中心再激活
 
-void mouse_move_cb(GLFWwindow* window, double xposIn, double yposIn);
-void mouse_scroll_cb(GLFWwindow* window, double xoffset, double yoffset);
+void windowSizeChangeCallback(GLFWwindow* window, int newWidth, int newHeight);
+void mouseMoveCallBack(GLFWwindow* window, double xposIn, double yposIn);
+void mouseScrollCallBack(GLFWwindow* window, double xoffset, double yoffset);
 
 int main() {
+
 	GLFWwindow* window = initAndCreateWindow(WIDTH, HEIGHT, "6.2");
 	if (window == nullptr) {
 		glfwTerminate();
 		return -1;
 	}
-	glfwSetFramebufferSizeCallback(window, framebufferSizeChangeCallback);
-	glfwSetScrollCallback(window, mouse_scroll_cb);
-	glfwSetCursorPosCallback(window, mouse_move_cb);
+
+	glfwSetFramebufferSizeCallback(window, windowSizeChangeCallback);
+	glfwSetScrollCallback(window, mouseScrollCallBack);
+	glfwSetCursorPosCallback(window, mouseMoveCallBack);
 
 	// 立方体的顶点， 每个面两个三角形，每个三角形3个顶点 6 * 2 * 3
 	float vertices[] = {
@@ -94,10 +93,14 @@ int main() {
 	unsigned int dimension[] = { 3, 2 };
 	unsigned int stride[] = { 5, 5 };
 	unsigned int offset[] = { 0, 3 };
-	unsigned int VAO = set_VAO_VBO_EBO_mutiple(
+	VAOData vaoData = set_VAO_VBO_EBO_mutiple(
 		vertices, sizeof(vertices), nullptr, 0,
 		3, location, dimension, stride, offset
 	);
+
+	unsigned int VAO = vaoData.VAO;
+	unsigned int VBO = vaoData.VBO;
+	unsigned int EBO = vaoData.EBO;
 
 	// 第一个纹理
 	unsigned int texture1 = createTexture(
@@ -179,7 +182,6 @@ int main() {
 			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 			ourShader.setMat4("model", model);
 
-			// 绘制矩形
 			glBindVertexArray(VAO);
 			glDrawArrays(GL_TRIANGLES, 0, 36); // 绘制立方体
 		}
@@ -187,12 +189,18 @@ int main() {
 		jobBeforRenderLoopEnd(window);
 	}
 
-	// 清理工作....
+	glDisable(GL_DEPTH_TEST); 
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteTextures(1, &texture1);
+	glDeleteTextures(1, &texture2);
+	glfwTerminate();
 	return 0;
 }
 
 
-void mouse_move_cb(GLFWwindow* window, double xPosIn, double yPosIn) {
+void mouseMoveCallBack(GLFWwindow* window, double xPosIn, double yPosIn) {
 	// 当前帧的鼠标位置
 	float xPos = static_cast<float>(xPosIn);
 	float yPos = static_cast<float>(yPosIn);
@@ -228,6 +236,10 @@ void mouse_move_cb(GLFWwindow* window, double xPosIn, double yPosIn) {
 }
 
 
-void mouse_scroll_cb(GLFWwindow* window, double xoffset, double yoffset) {
+void mouseScrollCallBack(GLFWwindow* window, double xoffset, double yoffset) {
 	camera.ProcessMouseScroll(static_cast<float>(yoffset));
+}
+
+void windowSizeChangeCallback(GLFWwindow* window, int newWidth, int newHeight) {
+	glViewport(0, 0, newWidth, newHeight);
 }

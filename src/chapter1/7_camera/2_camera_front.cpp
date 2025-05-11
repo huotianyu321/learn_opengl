@@ -1,9 +1,10 @@
 // wasd控制, keybord事件
 // 体会一下定义cameraFront这个向量的便利
-// cameraFront向量所在的坐标系是相机的坐标系， 与相机坐标系的z轴相反向， 指向相机看向的位置
+// cameraFront 与 “相机坐标系的z轴在世界坐标系中的向量表示” 相反向
+// cameraFront“以相机的世界位置为原点”指向相机看向的“目标点在世界坐标系的位置”
 // 通过相机的世界坐标cameraPos和cameraFront很容易计算出目标点的世界坐标(cameraPos+cameraFront)
 // 其次，通过cameraFront和worldUp可以计算出cameraRight
-// 这个练习中cameraFront始终是(0, 0, -1)，在相机坐标系中，相机始终看向着-z
+// 这个练习中cameraFront始终是(0, 0, -1)，相机始终看向-z
 // 下个练习中，当相机的欧拉角变化时，可以通过欧拉角计算出cameraFront
 
 // 注意worldUp是相机所在世界的上向量，不是相机坐标系的y轴正方向（当俯仰角变化时，相机坐标系的y轴正方向与worldUp不同）
