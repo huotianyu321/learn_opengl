@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\chapter2_light\1_color\1_lighting_scene.cpp" />
+    <ClCompile Include="src\chapter2_light\2_basic_lighting\1_phong.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\realize\process_events.cpp" />
     <ClCompile Include="src\realize\set_uniform.cpp" />
@@ -66,6 +66,10 @@
     <None Include="src\chapter2_light\1_color\1_code.vs" />
     <None Include="src\chapter2_light\1_color\1_code_box.fs" />
     <None Include="src\chapter2_light\1_color\1_code_light.fs" />
+    <None Include="src\chapter2_light\2_basic_lighting\1_code.vs" />
+    <None Include="src\chapter2_light\2_basic_lighting\1_code_box.vs" />
+    <None Include="src\chapter2_light\2_basic_lighting\1_code_box.fs" />
+    <None Include="src\chapter2_light\2_basic_lighting\1_code_light.fs" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\awesomeface.png" />
