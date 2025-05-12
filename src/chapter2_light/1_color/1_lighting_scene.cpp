@@ -15,10 +15,10 @@ const char* boxfragmentCodePath = "./src/chapter2_light/1_color/1_code_box.fs";
 const char* lightfragmentCodePath = "./src/chapter2_light/1_color/1_code_light.fs";
 
 Camera camera = Camera(
-	glm::vec3(0.0f, 0.0f, 5.0f), 
-	glm::vec3(0.0f, 1.0f, 0.0f), 
-	-90.0f, 
-	0.0f
+	glm::vec3(0.0f, 0.0f, 5.0f), // 初始位置
+	glm::vec3(0.0f, 1.0f, 0.0f), // worldUp
+	-90.0f, // 初始Yaw 偏航角
+	0.0f // 初始Pitch 俯仰角
 );
 
 float lastX = 0; 
@@ -90,6 +90,8 @@ int main() {
 		-0.5f,  0.5f,  0.5f,
 		-0.5f,  0.5f, -0.5f,
 	};
+	// 注： 教程里只创建了一个VBO， 光源和立方体共用
+	// 这里偷懒创建了两次
 	VAOData boxVaoData = set_VAO_VBO_EBO(
 		vertices, sizeof(vertices), nullptr, 0,
 		 0, 3, 3, 0
