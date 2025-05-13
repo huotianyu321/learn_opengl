@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\chapter2_light\2_basic_lighting\1_phong.cpp" />
+    <ClCompile Include="src\chapter2_light\2_basic_lighting\exercise2_phong_in_viewspace.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\realize\process_events.cpp" />
     <ClCompile Include="src\realize\set_uniform.cpp" />
@@ -53,6 +53,8 @@
     <Text Include="src\chapter2_light\2_basic_lighting\1_box_vs.txt" />
     <Text Include="src\chapter2_light\2_basic_lighting\1_light_fs.txt" />
     <Text Include="src\chapter2_light\2_basic_lighting\1_light_vs.txt" />
+    <Text Include="src\chapter2_light\2_basic_lighting\exercise2_box_fs.txt" />
+    <Text Include="src\chapter2_light\2_basic_lighting\exercise2_box_vs.txt" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="libs\glfw3.lib" />

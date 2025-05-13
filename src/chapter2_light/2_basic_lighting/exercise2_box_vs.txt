@@ -1,0 +1,28 @@
+#version 330 core
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec3 aNormal; // 法向量
+
+out vec3 FragPos; // 片段位置
+out vec3 Normal; // 片段法向量
+out vec3 LightPos; // 现在片段着色器需要光源在观察空间中的位置，因此在顶点着色器中进行计算
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+uniform vec3 lightPos;
+
+void main()
+{
+
+    // 将片段位置转换到观察空间
+    FragPos = vec3(view * model * vec4(aPos, 1.0)); // 计算片段位置
+
+    // 使用变换矩阵左上角3*3矩阵的逆矩阵的转置矩阵对法向量进行变换，防止非均匀缩放对法向量的影响
+    Normal = mat3(transpose(inverse(view * model))) * aNormal; // 计算法向量
+
+    //
+    LightPos = vec3(view * vec4(lightPos, 1.0)); // 计算光源位置
+
+    gl_Position = projection * view * model * vec4(aPos, 1.0);
+
+}

@@ -1,4 +1,6 @@
-// 风氏光照模型
+// 风氏光照模型,
+// 旋转光源 
+// 尝试改变高光和反光度specPower, 各分量强度ambientStrength, diffuseStrength, specularStrength
 
 #include <HEADER/utils.hpp>
 #include <HEADER/shader_class.hpp>
@@ -7,6 +9,7 @@
 #include <HEADER/camera_class.hpp>
 
 #include <iostream>
+#include <cmath>
 
 const int WIDTH = 1800;
 const int HEIGHT = 1200;
@@ -112,12 +115,11 @@ int main() {
 	boxShader.use();
 	boxShader.set3Float("lightColor", 1.0f, 1.0f, 1.0f);
 	boxShader.set1Vec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
-	boxShader.setFloat("specPower", 32.0f);
+	// 尝试改变高光反光度
+	// 高光度越大，反射能力越强，散射越少，反射光的光斑越集中
+	boxShader.setFloat("specPower", 128.0f);
 	lightShader.use();
 	lightShader.set3Float("lightColor", 1.0f, 1.0f, 1.0f);
-
-	// 光源位置
-	glm::vec3 lightPos(2.0f, 0.0f, 0.0f);
 
 	jobBeforeEnterRenderLoop(window);
 	// 渲染循环
@@ -129,6 +131,9 @@ int main() {
 
 		jobAtRenderLoopStart(window);
 		processWASD(window, camera, deltaTime);
+
+		// 光源位置
+		glm::vec3 lightPos(2.0f * sin(t), 0.0f, 2.0f * cos(t));
 
 		// 透视投影矩阵
 		glm::mat4 projection;
@@ -183,7 +188,7 @@ void mouseMoveCallBack(GLFWwindow* window, double xPosIn, double yPosIn) {
 	// 当前帧的鼠标位置
 	float xPos = static_cast<float>(xPosIn);
 	float yPos = static_cast<float>(yPosIn);
-	std::cout << "X: " << xPos << " Y: " << yPos << std::endl;
+	// std::cout << "X: " << xPos << " Y: " << yPos << std::endl;
 
 	// 让鼠标从外边移动到中心再激活控制
 	if (
