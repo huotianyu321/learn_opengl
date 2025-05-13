@@ -49,6 +49,10 @@
     <Text Include="src\chapter1\3_shader\exercise2_code.vs" />
     <Text Include="src\chapter1\3_shader\exercise3_code.fs" />
     <Text Include="src\chapter1\3_shader\exercise3_code.vs" />
+    <Text Include="src\chapter2_light\2_basic_lighting\1_box_fs.txt" />
+    <Text Include="src\chapter2_light\2_basic_lighting\1_box_vs.txt" />
+    <Text Include="src\chapter2_light\2_basic_lighting\1_light_fs.txt" />
+    <Text Include="src\chapter2_light\2_basic_lighting\1_light_vs.txt" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="libs\glfw3.lib" />
@@ -66,7 +70,7 @@
     <None Include="src\chapter2_light\1_color\1_code.vs" />
     <None Include="src\chapter2_light\1_color\1_code_box.fs" />
     <None Include="src\chapter2_light\1_color\1_code_light.fs" />
-    <None Include="src\chapter2_light\2_basic_lighting\1_code.vs" />
+    <None Include="src\chapter2_light\2_basic_lighting\1_code_box.tfs" />
     <None Include="src\chapter2_light\2_basic_lighting\1_code_box.vs" />
     <None Include="src\chapter2_light\2_basic_lighting\1_code_box.fs" />
     <None Include="src\chapter2_light\2_basic_lighting\1_code_light.fs" />

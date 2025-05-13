@@ -77,6 +77,10 @@ void Shader::set3Float(const std::string& name, float v1, float v2, float v3) co
 	set3float(this->ID, name, v1, v2, v3);
 }
 
+void Shader::set1Vec3(const std::string& name, const glm::vec3& vec) const {
+    set1vec3(this->ID, name, vec);
+}
+
 void Shader::set4Float(const std::string& name, float v1, float v2, float v3, float v4) const {
 	set4float(this->ID, name, v1, v2, v3, v4);
 }

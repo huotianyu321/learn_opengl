@@ -10,13 +10,13 @@
 
 const int WIDTH = 1800;
 const int HEIGHT = 1200;
-const char* boxVertexCodePath = "./src/chapter2_light/2_basic_lighting/1_code_box.vs";
-const char* boxFragmentCodePath = "./src/chapter2_light/2_basic_lighting/1_code_box.fs";
-const char* lightFragmentCodePath = "./src/chapter2_light/2_basic_lighting/1_code_light.fs";
-const char* lightVertexCodePath = "./src/chapter2_light/2_basic_lighting/1_code.vs";
+const char* boxVertexCodePath = "./src/chapter2_light/2_basic_lighting/1_box_vs.txt";
+const char* boxFragmentCodePath = "./src/chapter2_light/2_basic_lighting/1_box_fs.txt";
+const char* lightFragmentCodePath = "./src/chapter2_light/2_basic_lighting/1_light_fs.txt";
+const char* lightVertexCodePath = "./src/chapter2_light/2_basic_lighting/1_light_vs.txt";
 
 Camera camera = Camera(
-	glm::vec3(0.0f, 0.0f, 5.0f), // 初始位置
+	glm::vec3(0.0f, 0.0f, 4.0f), // 初始位置
 	glm::vec3(0.0f, 1.0f, 0.0f), // worldUp
 	-90.0f, // 初始Yaw 偏航角
 	0.0f // 初始Pitch 俯仰角
@@ -44,7 +44,6 @@ int main() {
 	glfwSetScrollCallback(window, mouseScrollCallBack);
 	glfwSetCursorPosCallback(window, mouseMoveCallBack);
 
-	// 立方体的顶点， 每个面两个三角形，每个三角形3个顶点 6 * 2 * 3
 	// 前3个是顶点位置，后三个是法向量
 	float vertices[] = {
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
@@ -95,7 +94,6 @@ int main() {
 	unsigned int strides[] = { 6 , 6 };
 	unsigned int offsets[] = { 0, 3 };
 
-
 	VAOData boxVaoData = set_VAO_VBO_EBO_mutiple(
 		vertices, sizeof(vertices), nullptr, 0,
 		2, locations, dimensions, strides, offsets
@@ -113,10 +111,13 @@ int main() {
 
 	boxShader.use();
 	boxShader.set3Float("lightColor", 1.0f, 1.0f, 1.0f);
-	boxShader.set3Float("objectColor", 1.0f, 0.5f, 0.31f);
+	boxShader.set1Vec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
+	boxShader.setFloat("specPower", 128.0f);
+	lightShader.use();
+	lightShader.set3Float("lightColor", 1.0f, 1.0f, 1.0f);
 
 	// 光源位置
-	glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+	glm::vec3 lightPos(2.0f, 0.0f, 0.0f);
 
 	jobBeforeEnterRenderLoop(window);
 	// 渲染循环
@@ -139,13 +140,13 @@ int main() {
 		// box 模型矩阵
 		glm::mat4 boxModel;
 
-		// 绘制box  lightColor * objectColor -> 物体颜色
+		// 绘制box
 		boxShader.use();
 		boxShader.setMat4("projection", projection);
 		boxShader.setMat4("view", view);
 		boxShader.setMat4("model", boxModel);
 		boxShader.set3Float("lightPos", lightPos.x, lightPos.y, lightPos.z);
-		boxShader.set3Float("viewPos", camera.Position.x, camera.Position.y, camera.Position.z);
+		boxShader.set1Vec3("viewPos", camera.Position);
 
 		glBindVertexArray(boxVaoData.VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36); // 绘制立方体

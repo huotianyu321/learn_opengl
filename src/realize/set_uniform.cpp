@@ -22,6 +22,17 @@ void set3float(
 	glUniform3f(location, v1, v2, v3);
 }
 
+void set1vec3(unsigned int shaderProgramID, const std::string& uniformName, const glm::vec3& vec3) {
+	int location = findUniform(shaderProgramID, uniformName);
+	if (location == -1) {
+		std::cout << "uniform: " << uniformName << " not found" << std::endl;
+		return;
+	}
+
+	glUseProgram(shaderProgramID);
+	glUniform3fv(location, 1, glm::value_ptr(vec3));
+}
+
 
 void set4float(
 	unsigned int shaderProgramID,
