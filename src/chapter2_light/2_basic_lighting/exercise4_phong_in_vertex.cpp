@@ -1,5 +1,4 @@
-// ÔÚ¹Û²ì¿Õ¼äÖĞÊµÏÖPhong¹âÕÕÄ£ĞÍ
-// Ö÷³ÌĞòÃ»Ê²Ã´²î±ğ£¬Ö÷ÒªÔÚ¹âÕÕ×ÅÉ«Æ÷µÄÖĞ
+// åœ¨é¡¶ç‚¹ç€è‰²å™¨ä¸­å®šä¹‰é£æ°å…‰ç…§æ¨¡å‹ - æ­¤æ—¶å«åšGouraudç€è‰²ï¼Œè€Œä¸æ˜¯Phongç€è‰²
 
 #include <HEADER/utils.hpp>
 #include <HEADER/shader_class.hpp>
@@ -8,27 +7,26 @@
 #include <HEADER/camera_class.hpp>
 
 #include <iostream>
-#include <cmath>
 
 const int WIDTH = 1800;
 const int HEIGHT = 1200;
-const char* boxVertexCodePath = "./src/chapter2_light/2_basic_lighting/exercise2_box_vs.txt";
-const char* boxFragmentCodePath = "./src/chapter2_light/2_basic_lighting/exercise2_box_fs.txt";
+const char* boxVertexCodePath = "./src/chapter2_light/2_basic_lighting/exercise4_box_vs.txt";
+const char* boxFragmentCodePath = "./src/chapter2_light/2_basic_lighting/exercise4_box_fs.txt";
 const char* lightFragmentCodePath = "./src/chapter2_light/2_basic_lighting/1_light_fs.txt";
 const char* lightVertexCodePath = "./src/chapter2_light/2_basic_lighting/1_light_vs.txt";
 
 Camera camera = Camera(
-	glm::vec3(0.0f, 0.0f, 4.0f), // ³õÊ¼Î»ÖÃ
+	glm::vec3(0.0f, 0.0f, 4.0f), // åˆå§‹ä½ç½®
 	glm::vec3(0.0f, 1.0f, 0.0f), // worldUp
-	-90.0f, // ³õÊ¼Yaw Æ«º½½Ç
-	0.0f // ³õÊ¼Pitch ¸©Ñö½Ç
+	-90.0f, // åˆå§‹Yaw åèˆªè§’
+	0.0f // åˆå§‹Pitch ä¿¯ä»°è§’
 );
 
 float lastX = 0;
 float lastY = 0;
 float deltaTime = 0.0f;
 float lastFrameTime = 0.0f;
-bool mouseControlActive = false; // µ±Êó±êÒÆµ½´°¿ÚÖĞĞÄÔÙ¼¤»î
+bool mouseControlActive = false; // å½“é¼ æ ‡ç§»åˆ°çª—å£ä¸­å¿ƒå†æ¿€æ´»
 
 void windowSizeChangeCallback(GLFWwindow* window, int newWidth, int newHeight);
 void mouseMoveCallBack(GLFWwindow* window, double xposIn, double yposIn);
@@ -46,7 +44,7 @@ int main() {
 	glfwSetScrollCallback(window, mouseScrollCallBack);
 	glfwSetCursorPosCallback(window, mouseMoveCallBack);
 
-	// Ç°3¸öÊÇ¶¥µãÎ»ÖÃ£¬ºóÈı¸öÊÇ·¨ÏòÁ¿
+	// å‰3ä¸ªæ˜¯é¡¶ç‚¹ä½ç½®ï¼Œåä¸‰ä¸ªæ˜¯æ³•å‘é‡
 	float vertices[] = {
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
@@ -106,22 +104,23 @@ int main() {
 	);
 
 
-	// ¹âÕÕ×ÅÉ«Æ÷(Ó¦ÓÃÔÚÁ¢·½ÌåÉÏ£©
+	// å…‰ç…§ç€è‰²å™¨(åº”ç”¨åœ¨ç«‹æ–¹ä½“ä¸Šï¼‰
 	Shader boxShader(boxVertexCodePath, boxFragmentCodePath);
-	// ¹âÔ´×ÅÉ«Æ÷
+	// å…‰æºç€è‰²å™¨
 	Shader lightShader(lightVertexCodePath, lightFragmentCodePath);
 
 	boxShader.use();
 	boxShader.set3Float("lightColor", 1.0f, 1.0f, 1.0f);
 	boxShader.set1Vec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
-	// ³¢ÊÔ¸Ä±ä¸ß¹â·´¹â¶È
-	// ¸ß¹â¶ÈÔ½´ó£¬·´ÉäÄÜÁ¦Ô½Ç¿£¬É¢ÉäÔ½ÉÙ£¬·´Éä¹âµÄ¹â°ßÔ½¼¯ÖĞ
-	boxShader.setFloat("specPower", 128.0f);
+	//boxShader.setFloat("specPower", 32.0f);
 	lightShader.use();
 	lightShader.set3Float("lightColor", 1.0f, 1.0f, 1.0f);
 
+	// å…‰æºä½ç½®
+	glm::vec3 lightPos(2.0f, 0.0f, 0.0f);
+
 	jobBeforeEnterRenderLoop(window);
-	// äÖÈ¾Ñ­»·
+	// æ¸²æŸ“å¾ªç¯
 	while (!glfwWindowShouldClose(window)) {
 		float t = glfwGetTime();
 		float currentFrameTime = t;
@@ -131,41 +130,39 @@ int main() {
 		jobAtRenderLoopStart(window);
 		processWASD(window, camera, deltaTime);
 
-		// ¹âÔ´Î»ÖÃ
-		glm::vec3 lightPos(2.0f * sin(t), 0.0f, 2.0f * cos(t));
-
-		// Í¸ÊÓÍ¶Ó°¾ØÕó
+		// é€è§†æŠ•å½±çŸ©é˜µ
 		glm::mat4 projection;
-		projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f); // Í¸ÊÓÍ¶Ó°
+		projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f); // é€è§†æŠ•å½±
 
-		// ¹Û²ì¾ØÕó
+		// è§‚å¯ŸçŸ©é˜µ
 		glm::mat4 view = camera.GetViewMatrix();
 
-		// box Ä£ĞÍ¾ØÕó
+		// box æ¨¡å‹çŸ©é˜µ
 		glm::mat4 boxModel;
 
-		// »æÖÆbox
+		// ç»˜åˆ¶box
 		boxShader.use();
 		boxShader.setMat4("projection", projection);
 		boxShader.setMat4("view", view);
 		boxShader.setMat4("model", boxModel);
 		boxShader.set3Float("lightPos", lightPos.x, lightPos.y, lightPos.z);
+		boxShader.set1Vec3("viewPos", camera.Position);
 
 		glBindVertexArray(boxVaoData.VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36); // »æÖÆÁ¢·½Ìå
+		glDrawArrays(GL_TRIANGLES, 0, 36); // ç»˜åˆ¶ç«‹æ–¹ä½“
 
-		// ¹âÔ´ Ä£ĞÍ¾ØÕó
+		// å…‰æº æ¨¡å‹çŸ©é˜µ
 		glm::mat4 lightModel;
 		lightModel = glm::translate(lightModel, lightPos);
 		lightModel = glm::scale(lightModel, glm::vec3(0.2f));
 
-		// »æÖÆ¹âÔ´Á¢·½Ìå
+		// ç»˜åˆ¶å…‰æºç«‹æ–¹ä½“
 		lightShader.use();
 		lightShader.setMat4("projection", projection);
 		lightShader.setMat4("view", view);
 		lightShader.setMat4("model", lightModel);
 		glBindVertexArray(lightVaoData.VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36); // »æÖÆ¹âÔ´
+		glDrawArrays(GL_TRIANGLES, 0, 36); // ç»˜åˆ¶å…‰æº
 
 		jobBeforRenderLoopEnd(window);
 	}
@@ -183,12 +180,12 @@ int main() {
 
 
 void mouseMoveCallBack(GLFWwindow* window, double xPosIn, double yPosIn) {
-	// µ±Ç°Ö¡µÄÊó±êÎ»ÖÃ
+	// å½“å‰å¸§çš„é¼ æ ‡ä½ç½®
 	float xPos = static_cast<float>(xPosIn);
 	float yPos = static_cast<float>(yPosIn);
 	// std::cout << "X: " << xPos << " Y: " << yPos << std::endl;
 
-	// ÈÃÊó±ê´ÓÍâ±ßÒÆ¶¯µ½ÖĞĞÄÔÙ¼¤»î¿ØÖÆ
+	// è®©é¼ æ ‡ä»å¤–è¾¹ç§»åŠ¨åˆ°ä¸­å¿ƒå†æ¿€æ´»æ§åˆ¶
 	if (
 		!mouseControlActive
 		&& xPos >= WIDTH / 2 - 10
@@ -196,7 +193,7 @@ void mouseMoveCallBack(GLFWwindow* window, double xPosIn, double yPosIn) {
 		&& yPos >= HEIGHT / 2 - 10
 		&& yPos <= HEIGHT / 2 + 10
 		) {
-		mouseControlActive = true; // Êó±êÒÆµ½´°¿ÚÖĞĞÄÊ±¼¤»î
+		mouseControlActive = true; // é¼ æ ‡ç§»åˆ°çª—å£ä¸­å¿ƒæ—¶æ¿€æ´»
 		lastX = xPos;
 		lastY = yPos;
 	}
@@ -205,16 +202,16 @@ void mouseMoveCallBack(GLFWwindow* window, double xPosIn, double yPosIn) {
 		return;
 	}
 
-	// ¼ÆËãÊó±êÒÆ¶¯µÄ¾àÀë
+	// è®¡ç®—é¼ æ ‡ç§»åŠ¨çš„è·ç¦»
 	float xOffset = xPos - lastX;
-	// ·´ÏòyÖá£¬ÆÁÄ»×ø±êÏµÊÇÒÔ×óÉÏ½ÇÎªÔ­µãµÄ. 
-	// µ±Êó±êÏòÏÂÒÆ¶¯Ê±£¬y×ø±êÔö´ó£¬µ«´ËÊ±¸©Ñö½ÇÓ¦¸Ã¼õĞ¡
+	// åå‘yè½´ï¼Œå±å¹•åæ ‡ç³»æ˜¯ä»¥å·¦ä¸Šè§’ä¸ºåŸç‚¹çš„. 
+	// å½“é¼ æ ‡å‘ä¸‹ç§»åŠ¨æ—¶ï¼Œyåæ ‡å¢å¤§ï¼Œä½†æ­¤æ—¶ä¿¯ä»°è§’åº”è¯¥å‡å°
 	float yOffset = lastY - yPos;
-	// ¸üĞÂÉÏÒ»Ö¡Êó±êÎ»ÖÃ
+	// æ›´æ–°ä¸Šä¸€å¸§é¼ æ ‡ä½ç½®
 	lastX = xPos;
 	lastY = yPos;
 
-	camera.ProcessMouseMovement(xOffset, yOffset); // ¸üĞÂÏà»úµÄ³¯Ïò
+	camera.ProcessMouseMovement(xOffset, yOffset); // æ›´æ–°ç›¸æœºçš„æœå‘
 }
 
 
