@@ -1,4 +1,14 @@
 // 在顶点着色器中定义风氏光照模型 - 此时叫做Gouraud着色，而不是Phong着色
+// 异常效果：
+/*
+* 那么我们看到什么？
+你可以看到（亲自或在提供的图像中）立方体前面两个三角形的清晰区分。
+这个‘带’之所以可见是因为片段插值。
+从示例图像中，我们可以看到立方体前面上右角的顶点被镜面高光照亮。
+由于底右三角形的上右角顶点被照亮，而三角形的其他两个顶点没有被照亮，因此明亮的值会插值到其他两个顶点。
+左上三角形也发生同样的情况。由于中间片段的颜色并不是直接来自光源，而是插值的结果，
+因此在中间片段的 lighting 是不正确的，上左和下右三角形的亮度相撞，导致两个三角形之间出现明显的带。当使用更复杂的形状时，这种效果会变得更加明显。
+*/
 
 #include <HEADER/utils.hpp>
 #include <HEADER/shader_class.hpp>
@@ -16,7 +26,7 @@ const char* lightFragmentCodePath = "./src/chapter2_light/2_basic_lighting/1_lig
 const char* lightVertexCodePath = "./src/chapter2_light/2_basic_lighting/1_light_vs.txt";
 
 Camera camera = Camera(
-	glm::vec3(0.0f, 0.0f, 4.0f), // 初始位置
+	glm::vec3(0.0f, 0.0f, 3.0f), // 初始位置
 	glm::vec3(0.0f, 1.0f, 0.0f), // worldUp
 	-90.0f, // 初始Yaw 偏航角
 	0.0f // 初始Pitch 俯仰角
@@ -117,7 +127,7 @@ int main() {
 	lightShader.set3Float("lightColor", 1.0f, 1.0f, 1.0f);
 
 	// 光源位置
-	glm::vec3 lightPos(2.0f, 0.0f, 0.0f);
+	glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 	jobBeforeEnterRenderLoop(window);
 	// 渲染循环
@@ -147,6 +157,7 @@ int main() {
 		boxShader.setMat4("model", boxModel);
 		boxShader.set3Float("lightPos", lightPos.x, lightPos.y, lightPos.z);
 		boxShader.set1Vec3("viewPos", camera.Position);
+		std::cout << "camera pos" << camera.Position.x << " " << camera.Position.y << " " << camera.Position.z << std::endl;
 
 		glBindVertexArray(boxVaoData.VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36); // 绘制立方体

@@ -2,15 +2,13 @@
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal; // 法向量
 
-// out vec3 FragPos; // 片段位置
-// out vec3 Normal; // 片段法向量
 out vec3 LightingColor;
 
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
-uniform vec3 lightPos; // 光源位置(已经过模型矩阵变换)
-uniform vec3 viewPos; // 相机位置(已经过模型矩阵变换)
+uniform vec3 lightPos; // 光源位置（世界坐标系)
+uniform vec3 viewPos; // 相机位置 (世界坐标系)
 uniform vec3 lightColor;
 // uniform float specPower; // 高光反光度
 
@@ -24,11 +22,11 @@ void main()
     vec3 FragPos = vec3(model * vec4(aPos, 1.0)); // 计算片段位置
 
     // 环境光
-    float ambientStrength = 0.2;
+    float ambientStrength = 0.1;
     vec3 ambient = ambientStrength * lightColor;
 
     // 漫反射
-    float diffuseStrength = 0;
+    float diffuseStrength = 1;
     vec3 lightDir = normalize(lightPos - FragPos);
     // 计算两向量的夹角，代表漫反射强度
     float diff = max(dot(norm, lightDir), 0.0);
