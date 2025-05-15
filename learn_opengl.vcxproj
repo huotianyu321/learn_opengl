@@ -62,6 +62,8 @@
     <Text Include="src\chapter2_light\3_material\1_box_vs.txt" />
     <Text Include="src\chapter2_light\3_material\2_box_fs.txt" />
     <Text Include="src\chapter2_light\3_material\2_box_vs.txt" />
+    <Text Include="src\chapter2_light\3_material\3_box_fs.txt" />
+    <Text Include="src\chapter2_light\3_material\3_box_vs.txt" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="libs\glfw3.lib" />

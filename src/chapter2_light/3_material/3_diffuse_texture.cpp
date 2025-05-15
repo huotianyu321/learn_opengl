@@ -1,4 +1,5 @@
-// 片段着色器 光源结构体
+// 片段着色器 漫反射贴图
+// 使用漫反射贴图代替材质结构体中的漫反射颜色和环境光颜色，使不同片段有更真实的颜色
 
 #include <HEADER/utils.hpp>
 #include <HEADER/shader_class.hpp>
@@ -44,7 +45,7 @@ int main() {
 	glfwSetScrollCallback(window, mouseScrollCallBack);
 	glfwSetCursorPosCallback(window, mouseMoveCallBack);
 
-	// 前3个是顶点位置，后三个是法向量
+	// 前3个是顶点位置，中间三个是法向量， 后两个是纹理坐标
 	float vertices[] = {
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
@@ -89,10 +90,10 @@ int main() {
 		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
 	};
 
-	unsigned int locations[] = { 0, 1 };
-	unsigned int dimensions[] = { 3, 3 };
-	unsigned int strides[] = { 6 , 6 };
-	unsigned int offsets[] = { 0, 3 };
+	unsigned int locations[] = { 0, 1, 2 };
+	unsigned int dimensions[] = { 3, 3, 2 };
+	unsigned int strides[] = { 8, 8, 8 };
+	unsigned int offsets[] = { 0, 3, 6 };
 
 	VAOData boxVaoData = set_VAO_VBO_EBO_mutiple(
 		vertices, sizeof(vertices), nullptr, 0,
