@@ -9,7 +9,7 @@ uniform vec3 objectColor;
 uniform vec3 lightColor; 
 // uniform vec3 viewPos; // 现在不需要相机位置，在观察空间中相机位置始终是(0, 0, 0)
 
-uniform float specPower;
+uniform float specPower; // 高光反光度
 
 void main()
 {

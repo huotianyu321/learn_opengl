@@ -1,14 +1,4 @@
-// åœ¨é¡¶ç‚¹ç€è‰²å™¨ä¸­å®šä¹‰é£æ°å…‰ç…§æ¨¡å‹ - æ­¤æ—¶å«åšGouraudç€è‰²ï¼Œè€Œä¸æ˜¯Phongç€è‰²
-// å¼‚å¸¸æ•ˆæœï¼š
-/*
-* é‚£ä¹ˆæˆ‘ä»¬çœ‹åˆ°ä»€ä¹ˆï¼Ÿ
-ä½ å¯ä»¥çœ‹åˆ°ï¼ˆäº²è‡ªæˆ–åœ¨æä¾›çš„å›¾åƒä¸­ï¼‰ç«‹æ–¹ä½“å‰é¢ä¸¤ä¸ªä¸‰è§’å½¢çš„æ¸…æ™°åŒºåˆ†ã€‚
-è¿™ä¸ªâ€˜å¸¦â€™ä¹‹æ‰€ä»¥å¯è§æ˜¯å› ä¸ºç‰‡æ®µæ’å€¼ã€‚
-ä»ç¤ºä¾‹å›¾åƒä¸­ï¼Œæˆ‘ä»¬å¯ä»¥çœ‹åˆ°ç«‹æ–¹ä½“å‰é¢ä¸Šå³è§’çš„é¡¶ç‚¹è¢«é•œé¢é«˜å…‰ç…§äº®ã€‚
-ç”±äºåº•å³ä¸‰è§’å½¢çš„ä¸Šå³è§’é¡¶ç‚¹è¢«ç…§äº®ï¼Œè€Œä¸‰è§’å½¢çš„å…¶ä»–ä¸¤ä¸ªé¡¶ç‚¹æ²¡æœ‰è¢«ç…§äº®ï¼Œå› æ­¤æ˜äº®çš„å€¼ä¼šæ’å€¼åˆ°å…¶ä»–ä¸¤ä¸ªé¡¶ç‚¹ã€‚
-å·¦ä¸Šä¸‰è§’å½¢ä¹Ÿå‘ç”ŸåŒæ ·çš„æƒ…å†µã€‚ç”±äºä¸­é—´ç‰‡æ®µçš„é¢œè‰²å¹¶ä¸æ˜¯ç›´æ¥æ¥è‡ªå…‰æºï¼Œè€Œæ˜¯æ’å€¼çš„ç»“æœï¼Œ
-å› æ­¤åœ¨ä¸­é—´ç‰‡æ®µçš„ lighting æ˜¯ä¸æ­£ç¡®çš„ï¼Œä¸Šå·¦å’Œä¸‹å³ä¸‰è§’å½¢çš„äº®åº¦ç›¸æ’ï¼Œå¯¼è‡´ä¸¤ä¸ªä¸‰è§’å½¢ä¹‹é—´å‡ºç°æ˜æ˜¾çš„å¸¦ã€‚å½“ä½¿ç”¨æ›´å¤æ‚çš„å½¢çŠ¶æ—¶ï¼Œè¿™ç§æ•ˆæœä¼šå˜å¾—æ›´åŠ æ˜æ˜¾ã€‚
-*/
+// Æ¬¶Î×ÅÉ«Æ÷ ²ÄÖÊ½á¹¹Ìå
 
 #include <HEADER/utils.hpp>
 #include <HEADER/shader_class.hpp>
@@ -20,23 +10,23 @@
 
 const int WIDTH = 1800;
 const int HEIGHT = 1200;
-const char* boxVertexCodePath = "./src/chapter2_light/2_basic_lighting/exercise4_box_vs.txt";
-const char* boxFragmentCodePath = "./src/chapter2_light/2_basic_lighting/exercise4_box_fs.txt";
+const char* boxVertexCodePath = "./src/chapter2_light/3_material/1_box_vs.txt";
+const char* boxFragmentCodePath = "./src/chapter2_light/3_material/1_box_fs.txt";
 const char* lightFragmentCodePath = "./src/chapter2_light/2_basic_lighting/1_light_fs.txt";
 const char* lightVertexCodePath = "./src/chapter2_light/2_basic_lighting/1_light_vs.txt";
 
 Camera camera = Camera(
-	glm::vec3(0.0f, 0.0f, 3.0f), // åˆå§‹ä½ç½®
+	glm::vec3(0.0f, 0.0f, 3.0f), // ³õÊ¼Î»ÖÃ
 	glm::vec3(0.0f, 1.0f, 0.0f), // worldUp
-	-90.0f, // åˆå§‹Yaw åèˆªè§’
-	0.0f // åˆå§‹Pitch ä¿¯ä»°è§’
+	-90.0f, // ³õÊ¼Yaw Æ«º½½Ç
+	0.0f // ³õÊ¼Pitch ¸©Ñö½Ç
 );
 
 float lastX = 0;
 float lastY = 0;
 float deltaTime = 0.0f;
 float lastFrameTime = 0.0f;
-bool mouseControlActive = false; // å½“é¼ æ ‡ç§»åˆ°çª—å£ä¸­å¿ƒå†æ¿€æ´»
+bool mouseControlActive = false; // µ±Êó±êÒÆµ½´°¿ÚÖĞĞÄÔÙ¼¤»î
 
 void windowSizeChangeCallback(GLFWwindow* window, int newWidth, int newHeight);
 void mouseMoveCallBack(GLFWwindow* window, double xposIn, double yposIn);
@@ -54,7 +44,7 @@ int main() {
 	glfwSetScrollCallback(window, mouseScrollCallBack);
 	glfwSetCursorPosCallback(window, mouseMoveCallBack);
 
-	// å‰3ä¸ªæ˜¯é¡¶ç‚¹ä½ç½®ï¼Œåä¸‰ä¸ªæ˜¯æ³•å‘é‡
+	// Ç°3¸öÊÇ¶¥µãÎ»ÖÃ£¬ºóÈı¸öÊÇ·¨ÏòÁ¿
 	float vertices[] = {
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
@@ -114,23 +104,32 @@ int main() {
 	);
 
 
-	// å…‰ç…§ç€è‰²å™¨(åº”ç”¨åœ¨ç«‹æ–¹ä½“ä¸Šï¼‰
+	// ¹âÕÕ×ÅÉ«Æ÷(Ó¦ÓÃÔÚÁ¢·½ÌåÉÏ£©
 	Shader boxShader(boxVertexCodePath, boxFragmentCodePath);
-	// å…‰æºç€è‰²å™¨
+	// ¹âÔ´×ÅÉ«Æ÷
 	Shader lightShader(lightVertexCodePath, lightFragmentCodePath);
 
 	boxShader.use();
 	boxShader.set3Float("lightColor", 1.0f, 1.0f, 1.0f);
-	boxShader.set1Vec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
-	//boxShader.setFloat("specPower", 32.0f);
+	// ====½Ì³ÌµÄ£º
+	//boxShader.set1Vec3("material.ambient", glm::vec3(1.0f, 0.5f, 0.31f));
+	//boxShader.set1Vec3("material.diffuse", glm::vec3(1.0f, 0.5f, 0.31f));
+	//boxShader.set3Float("material.specular", 0.5f, 0.5f, 0.5f);
+	//boxShader.setFloat("material.shininess", 32.0f);
+	// ===Ê¾ÀıµÄhttp://devernay.free.fr/cours/opengl/materials.html
+	// red plastic
+	boxShader.set1Vec3("material.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
+	boxShader.set1Vec3("material.diffuse", glm::vec3(0.5f, 0.0f, 0.0f));
+	boxShader.set3Float("material.specular", 0.7f, 0.6f, 0.6f);
+	boxShader.setFloat("material.shininess", 32.0f);
 	lightShader.use();
 	lightShader.set3Float("lightColor", 1.0f, 1.0f, 1.0f);
 
-	// å…‰æºä½ç½®
+	// ¹âÔ´Î»ÖÃ
 	glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 	jobBeforeEnterRenderLoop(window);
-	// æ¸²æŸ“å¾ªç¯
+	// äÖÈ¾Ñ­»·
 	while (!glfwWindowShouldClose(window)) {
 		float t = glfwGetTime();
 		float currentFrameTime = t;
@@ -140,17 +139,17 @@ int main() {
 		jobAtRenderLoopStart(window);
 		processWASD(window, camera, deltaTime);
 
-		// é€è§†æŠ•å½±çŸ©é˜µ
+		// Í¸ÊÓÍ¶Ó°¾ØÕó
 		glm::mat4 projection;
-		projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f); // é€è§†æŠ•å½±
+		projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f); // Í¸ÊÓÍ¶Ó°
 
-		// è§‚å¯ŸçŸ©é˜µ
+		// ¹Û²ì¾ØÕó
 		glm::mat4 view = camera.GetViewMatrix();
 
-		// box æ¨¡å‹çŸ©é˜µ
+		// box Ä£ĞÍ¾ØÕó
 		glm::mat4 boxModel;
 
-		// ç»˜åˆ¶box
+		// »æÖÆbox
 		boxShader.use();
 		boxShader.setMat4("projection", projection);
 		boxShader.setMat4("view", view);
@@ -159,20 +158,20 @@ int main() {
 		boxShader.set1Vec3("viewPos", camera.Position);
 
 		glBindVertexArray(boxVaoData.VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36); // ç»˜åˆ¶ç«‹æ–¹ä½“
+		glDrawArrays(GL_TRIANGLES, 0, 36); // »æÖÆÁ¢·½Ìå
 
-		// å…‰æº æ¨¡å‹çŸ©é˜µ
+		// ¹âÔ´ Ä£ĞÍ¾ØÕó
 		glm::mat4 lightModel;
 		lightModel = glm::translate(lightModel, lightPos);
 		lightModel = glm::scale(lightModel, glm::vec3(0.2f));
 
-		// ç»˜åˆ¶å…‰æºç«‹æ–¹ä½“
+		// »æÖÆ¹âÔ´Á¢·½Ìå
 		lightShader.use();
 		lightShader.setMat4("projection", projection);
 		lightShader.setMat4("view", view);
 		lightShader.setMat4("model", lightModel);
 		glBindVertexArray(lightVaoData.VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36); // ç»˜åˆ¶å…‰æº
+		glDrawArrays(GL_TRIANGLES, 0, 36); // »æÖÆ¹âÔ´
 
 		jobBeforRenderLoopEnd(window);
 	}
@@ -190,12 +189,12 @@ int main() {
 
 
 void mouseMoveCallBack(GLFWwindow* window, double xPosIn, double yPosIn) {
-	// å½“å‰å¸§çš„é¼ æ ‡ä½ç½®
+	// µ±Ç°Ö¡µÄÊó±êÎ»ÖÃ
 	float xPos = static_cast<float>(xPosIn);
 	float yPos = static_cast<float>(yPosIn);
-	// std::cout << "X: " << xPos << " Y: " << yPos << std::endl;
+	std::cout << "X: " << xPos << " Y: " << yPos << std::endl;
 
-	// è®©é¼ æ ‡ä»å¤–è¾¹ç§»åŠ¨åˆ°ä¸­å¿ƒå†æ¿€æ´»æ§åˆ¶
+	// ÈÃÊó±ê´ÓÍâ±ßÒÆ¶¯µ½ÖĞĞÄÔÙ¼¤»î¿ØÖÆ
 	if (
 		!mouseControlActive
 		&& xPos >= WIDTH / 2 - 10
@@ -203,7 +202,7 @@ void mouseMoveCallBack(GLFWwindow* window, double xPosIn, double yPosIn) {
 		&& yPos >= HEIGHT / 2 - 10
 		&& yPos <= HEIGHT / 2 + 10
 		) {
-		mouseControlActive = true; // é¼ æ ‡ç§»åˆ°çª—å£ä¸­å¿ƒæ—¶æ¿€æ´»
+		mouseControlActive = true; // Êó±êÒÆµ½´°¿ÚÖĞĞÄÊ±¼¤»î
 		lastX = xPos;
 		lastY = yPos;
 	}
@@ -212,16 +211,16 @@ void mouseMoveCallBack(GLFWwindow* window, double xPosIn, double yPosIn) {
 		return;
 	}
 
-	// è®¡ç®—é¼ æ ‡ç§»åŠ¨çš„è·ç¦»
+	// ¼ÆËãÊó±êÒÆ¶¯µÄ¾àÀë
 	float xOffset = xPos - lastX;
-	// åå‘yè½´ï¼Œå±å¹•åæ ‡ç³»æ˜¯ä»¥å·¦ä¸Šè§’ä¸ºåŸç‚¹çš„. 
-	// å½“é¼ æ ‡å‘ä¸‹ç§»åŠ¨æ—¶ï¼Œyåæ ‡å¢å¤§ï¼Œä½†æ­¤æ—¶ä¿¯ä»°è§’åº”è¯¥å‡å°
+	// ·´ÏòyÖá£¬ÆÁÄ»×ø±êÏµÊÇÒÔ×óÉÏ½ÇÎªÔ­µãµÄ. 
+	// µ±Êó±êÏòÏÂÒÆ¶¯Ê±£¬y×ø±êÔö´ó£¬µ«´ËÊ±¸©Ñö½ÇÓ¦¸Ã¼õĞ¡
 	float yOffset = lastY - yPos;
-	// æ›´æ–°ä¸Šä¸€å¸§é¼ æ ‡ä½ç½®
+	// ¸üĞÂÉÏÒ»Ö¡Êó±êÎ»ÖÃ
 	lastX = xPos;
 	lastY = yPos;
 
-	camera.ProcessMouseMovement(xOffset, yOffset); // æ›´æ–°ç›¸æœºçš„æœå‘
+	camera.ProcessMouseMovement(xOffset, yOffset); // ¸üĞÂÏà»úµÄ³¯Ïò
 }
 
 

@@ -1,0 +1,56 @@
+#version 330 core
+out vec4 FragColor;
+
+in vec3 FragPos; 
+in vec3 Normal;
+
+// uniform vec3 objectColor;
+// uniform float specPower;
+// 在之前的片段着色器代码中，物体只有一种颜色, 并且需要自定义一个强度值来反映某种光照下的颜色强度
+
+// 现在通过该结构体定义物体在不同光照下应表现出的颜色，提高颜色控制的精细度
+struct Material {
+    vec3 ambient; // 环境光照下的颜色
+    vec3 diffuse; // 漫反射光照下的颜色
+    vec3 specular; // 镜面光颜色
+    float shininess; // 高光反光度（前几节片段着色器中的specPower)
+};
+uniform Material material;
+
+uniform vec3 lightColor; 
+uniform vec3 lightPos; // 光源位置
+uniform vec3 viewPos; // 相机位置
+
+void main()
+{
+    // 环境光
+    // ===之前：
+    // float ambientStrength = 0.2;
+    // vec3 ambient = ambientStrength * lightColor;
+    // ===现在:
+    vec3 ambient = material.ambient * lightColor;
+
+    // 漫反射
+    vec3 norm = normalize(Normal);
+    vec3 lightDir = normalize(lightPos - FragPos);
+    // 计算两向量的夹角，代表漫反射强度
+    float diff = max(dot(norm, lightDir), 0.0);
+    // ===之前：
+    // float diffuseStrength = 1.0;
+    // vec3 diffuse = diffuseStrength * diff * lightColor;
+    // ===现在:
+    vec3 diffuse = diff * material.diffuse * lightColor;
+
+    // 镜面反射
+    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 reflectDir = reflect(-lightDir, norm); 
+    // 镜面反射强度
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    // ===之前:
+    // float specularStrength = 0.5;
+    // vec3 specular = specularStrength * spec * lightColor;
+    // ===现在:
+    vec3 specular = spec * material.specular * lightColor;
+    
+    FragColor = vec4((ambient + diffuse + specular), 1.0);
+}

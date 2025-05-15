@@ -4,12 +4,12 @@ out vec4 FragColor;
 in vec3 FragPos; 
 in vec3 Normal;
 
-uniform vec3 objectColor;
-uniform vec3 lightColor; 
-uniform vec3 lightPos; // 光源位置
-uniform vec3 viewPos; // 相机位置
+uniform vec3 objectColor; // 物体的颜色
+uniform vec3 lightColor;  // 光源颜色
+uniform vec3 lightPos; // 光源世界位置
+uniform vec3 viewPos; // 相机世界位置
 
-uniform float specPower;
+uniform float specPower; // 高光反光度
 
 void main()
 {
