@@ -1,0 +1,50 @@
+#version 330 core
+out vec4 FragColor;
+
+in vec3 FragPos; 
+in vec3 Normal;
+
+struct Material {
+    vec3 ambient; // 环境光照下的颜色
+    vec3 diffuse; // 漫反射光照下的颜色
+    vec3 specular; // 镜面光颜色
+    float shininess; // 高光反光度（前几节片段着色器中的specPower)
+};
+uniform Material material;
+
+// uniform vec3 lightColor; 
+// uniform vec3 lightPos; // 光源位置
+// 在之前的着色器代码中，通过自定义强度比例来控制环境光、漫反射和镜面光三种情况的强度
+// 把这些功能放在一个结构体中
+struct Light {
+    vec3 position; 
+    vec3 ambient; // 光强通常较弱
+    vec3 diffuse;
+    vec3 specular; // 光强通常较强
+};
+uniform Light light;
+
+
+uniform vec3 viewPos; // 相机位置
+
+void main()
+{
+    // 环境光
+    vec3 ambient = material.ambient * light.ambient;
+
+    // 漫反射
+    vec3 norm = normalize(Normal);
+    vec3 lightDir = normalize(light.position - FragPos);
+    // 计算两向量的夹角，代表漫反射强度
+    float diff = max(dot(norm, lightDir), 0.0);
+    vec3 diffuse = diff * material.diffuse * light.diffuse;
+
+    // 镜面反射
+    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 reflectDir = reflect(-lightDir, norm); 
+    // 镜面反射强度
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    vec3 specular = spec * material.specular * light.specular;
+    
+    FragColor = vec4((ambient + diffuse + specular), 1.0);
+}

@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\chapter2_light\3_material\1_Material_struct.cpp" />
+    <ClCompile Include="src\chapter2_light\3_material\2_and_Light_struct.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\realize\process_events.cpp" />
     <ClCompile Include="src\realize\set_uniform.cpp" />
@@ -61,6 +61,8 @@
     <Text Include="src\chapter2_light\2_basic_lighting\exercise4_box_vs.txt" />
     <Text Include="src\chapter2_light\3_material\1_box_fs.txt" />
     <Text Include="src\chapter2_light\3_material\1_box_vs.txt" />
+    <Text Include="src\chapter2_light\3_material\2_box_fs.txt" />
+    <Text Include="src\chapter2_light\3_material\2_box_vs.txt" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="libs\glfw3.lib" />

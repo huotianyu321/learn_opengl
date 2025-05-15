@@ -10,8 +10,8 @@
 
 const int WIDTH = 1800;
 const int HEIGHT = 1200;
-const char* boxVertexCodePath = "./src/chapter2_light/3_material/1_box_vs.txt";
-const char* boxFragmentCodePath = "./src/chapter2_light/3_material/1_box_fs.txt";
+const char* boxVertexCodePath = "./src/chapter2_light/3_material/2_box_vs.txt";
+const char* boxFragmentCodePath = "./src/chapter2_light/3_material/2_box_fs.txt";
 const char* lightFragmentCodePath = "./src/chapter2_light/2_basic_lighting/1_light_fs.txt";
 const char* lightVertexCodePath = "./src/chapter2_light/2_basic_lighting/1_light_vs.txt";
 
@@ -110,23 +110,15 @@ int main() {
 	Shader lightShader(lightVertexCodePath, lightFragmentCodePath);
 
 	boxShader.use();
-	boxShader.set3Float("lightColor", 1.0f, 1.0f, 1.0f);
-	// ====教程的：
-	//boxShader.set1Vec3("material.ambient", glm::vec3(1.0f, 0.5f, 0.31f));
-	//boxShader.set1Vec3("material.diffuse", glm::vec3(1.0f, 0.5f, 0.31f));
-	//boxShader.set3Float("material.specular", 0.5f, 0.5f, 0.5f);
-	//boxShader.setFloat("material.shininess", 32.0f);
-	// ===示例的http://devernay.free.fr/cours/opengl/materials.html（要想模拟这些效果需要保持光源的各分量都为1.0）
-	// red plastic
-	boxShader.set1Vec3("material.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
-	boxShader.set1Vec3("material.diffuse", glm::vec3(0.5f, 0.0f, 0.0f));
-	boxShader.set3Float("material.specular", 0.7f, 0.6f, 0.6f);
+	boxShader.set1Vec3("material.ambient", glm::vec3(1.0f, 0.5f, 0.31f));
+	boxShader.set1Vec3("material.diffuse", glm::vec3(1.0f, 0.5f, 0.31f));
+	boxShader.set3Float("material.specular", 0.5f, 0.5f, 0.5f);
 	boxShader.setFloat("material.shininess", 32.0f);
 	lightShader.use();
 	lightShader.set3Float("lightColor", 1.0f, 1.0f, 1.0f);
 
 	// 光源位置
-	glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+	glm::vec3 lightPos(0.0f, 0.2f, 2.0f);
 
 	jobBeforeEnterRenderLoop(window);
 	// 渲染循环
@@ -154,8 +146,18 @@ int main() {
 		boxShader.setMat4("projection", projection);
 		boxShader.setMat4("view", view);
 		boxShader.setMat4("model", boxModel);
-		boxShader.set3Float("lightPos", lightPos.x, lightPos.y, lightPos.z);
+		boxShader.set3Float("light.position", lightPos.x, lightPos.y, lightPos.z);
 		boxShader.set1Vec3("viewPos", camera.Position);
+
+		glm::vec3 lightColor;
+		lightColor.x = sin(t * 2.0f);
+		lightColor.y = sin(t * 0.7f);
+		lightColor.z = sin(t * 1.3f);
+		glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f); // 降低影响
+		glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // 很低的影响
+		boxShader.set1Vec3("light.ambient", ambientColor);
+		boxShader.set1Vec3("light.diffuse", diffuseColor);
+		boxShader.set3Float("light.specular", 1.0, 1.0, 1.0);
 
 		glBindVertexArray(boxVaoData.VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36); // 绘制立方体

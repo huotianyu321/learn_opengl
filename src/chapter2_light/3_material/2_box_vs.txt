@@ -1,0 +1,21 @@
+#version 330 core
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec3 aNormal; // 法向量
+
+out vec3 FragPos; // 片段位置
+out vec3 Normal; // 片段法向量
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+void main()
+{
+    // 将顶点位置转换到世界坐标系
+    FragPos = vec3(model * vec4(aPos, 1.0)); // 计算片段位置
+
+    // 使用模型矩阵左上角3*3矩阵的逆矩阵的转置矩阵对法向量进行变换，防止非均匀缩放对法向量的影响
+    Normal = mat3(transpose(inverse(model))) * aNormal; // 计算法向量
+
+    gl_Position = projection * view * model * vec4(aPos, 1.0);
+}

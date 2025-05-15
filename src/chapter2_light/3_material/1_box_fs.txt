@@ -6,7 +6,7 @@ in vec3 Normal;
 
 // uniform vec3 objectColor;
 // uniform float specPower;
-// 在之前的片段着色器代码中，物体只有一种颜色, 并且需要自定义一个强度值来反映某种光照下的颜色强度
+// 在之前的片段着色器代码中，物体只有一种颜色
 
 // 现在通过该结构体定义物体在不同光照下应表现出的颜色，提高颜色控制的精细度
 struct Material {
