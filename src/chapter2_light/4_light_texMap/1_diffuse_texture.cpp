@@ -9,12 +9,15 @@
 
 #include <iostream>
 
+typedef unsigned int uint;
+
 const int WIDTH = 1800;
 const int HEIGHT = 1200;
-const char* boxVertexCodePath = "./src/chapter2_light/3_material/2_box_vs.txt";
-const char* boxFragmentCodePath = "./src/chapter2_light/3_material/2_box_fs.txt";
+const char* boxVertexCodePath = "./src/chapter2_light/4_light_texMap/1_box_vs.txt";
+const char* boxFragmentCodePath = "./src/chapter2_light/4_light_texMap/1_box_fs.txt";
 const char* lightFragmentCodePath = "./src/chapter2_light/2_basic_lighting/1_light_fs.txt";
 const char* lightVertexCodePath = "./src/chapter2_light/2_basic_lighting/1_light_vs.txt";
+const char* diffuseTexMapPath = "./resources/container2.png";
 
 Camera camera = Camera(
 	glm::vec3(0.0f, 0.0f, 3.0f), // 初始位置
@@ -35,7 +38,7 @@ void mouseScrollCallBack(GLFWwindow* window, double xoffset, double yoffset);
 
 int main() {
 
-	GLFWwindow* window = initAndCreateWindow(WIDTH, HEIGHT, "6.2");
+	GLFWwindow* window = initAndCreateWindow(WIDTH, HEIGHT, "opengl");
 	if (window == nullptr) {
 		glfwTerminate();
 		return -1;
@@ -47,47 +50,48 @@ int main() {
 
 	// 前3个是顶点位置，中间三个是法向量， 后两个是纹理坐标
 	float vertices[] = {
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		// positions          // normals           // texture coords
+	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+	 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
+	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
 
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
 
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+	-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
 
-		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
 
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
 
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
+	 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
 	};
 
 	unsigned int locations[] = { 0, 1, 2 };
@@ -97,29 +101,35 @@ int main() {
 
 	VAOData boxVaoData = set_VAO_VBO_EBO_mutiple(
 		vertices, sizeof(vertices), nullptr, 0,
-		2, locations, dimensions, strides, offsets
+		3, locations, dimensions, strides, offsets
 	);
 	VAOData lightVaoData = set_VAO_VBO_EBO(
 		vertices, sizeof(vertices), nullptr, 0,
-		0, 3, 6, 0
+		0, 3, 8, 0
 	);
-
-
-	// 光照着色器(应用在立方体上）
-	Shader boxShader(boxVertexCodePath, boxFragmentCodePath);
-	// 光源着色器
-	Shader lightShader(lightVertexCodePath, lightFragmentCodePath);
-
-	boxShader.use();
-	boxShader.set1Vec3("material.ambient", glm::vec3(1.0f, 0.5f, 0.31f));
-	boxShader.set1Vec3("material.diffuse", glm::vec3(1.0f, 0.5f, 0.31f));
-	boxShader.set3Float("material.specular", 0.5f, 0.5f, 0.5f);
-	boxShader.setFloat("material.shininess", 32.0f);
-	lightShader.use();
-	lightShader.set3Float("lightColor", 1.0f, 1.0f, 1.0f);
 
 	// 光源位置
 	glm::vec3 lightPos(0.0f, 0.2f, 2.0f);
+
+	uint diffuseTexMap = createTexture(diffuseTexMapPath, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR, true, false);
+
+	// 光照着色器(应用在立方体上）
+	Shader boxShader(boxVertexCodePath, boxFragmentCodePath);
+	boxShader.use();
+	// 这些没有改变过，就放在loop外边了
+	boxShader.set3Float("light.position", lightPos.x, lightPos.y, lightPos.z);
+	boxShader.set3Float("light.ambient", 0.2f, 0.2f, 0.2f);
+	boxShader.set3Float("light.diffuse", 0.5f, 0.5f, 0.5f);
+	boxShader.set3Float("light.specular", 1.0f, 1.0f, 1.0f);
+	boxShader.set3Float("material.specular", 0.5f, 0.5f, 0.5f);
+	boxShader.setFloat("material.shininess", 32.0f);
+	boxShader.setInt("matierial.diffuse", 0); // 将纹理采样器绑定到纹理单元0
+
+
+	// 光源着色器
+	Shader lightShader(lightVertexCodePath, lightFragmentCodePath);
+	lightShader.use();
+	lightShader.set3Float("lightColor", 1.0f, 1.0f, 1.0f);
 
 	jobBeforeEnterRenderLoop(window);
 	// 渲染循环
@@ -147,19 +157,10 @@ int main() {
 		boxShader.setMat4("projection", projection);
 		boxShader.setMat4("view", view);
 		boxShader.setMat4("model", boxModel);
-		boxShader.set3Float("light.position", lightPos.x, lightPos.y, lightPos.z);
 		boxShader.set1Vec3("viewPos", camera.Position);
-
-		glm::vec3 lightColor;
-		lightColor.x = sin(t * 2.0f);
-		lightColor.y = sin(t * 0.7f);
-		lightColor.z = sin(t * 1.3f);
-		glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f); // 降低影响
-		glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // 很低的影响
-		boxShader.set1Vec3("light.ambient", ambientColor);
-		boxShader.set1Vec3("light.diffuse", diffuseColor);
-		boxShader.set3Float("light.specular", 1.0, 1.0, 1.0);
-
+		boxShader.setInt("material.diffuse", 0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, diffuseTexMap);
 		glBindVertexArray(boxVaoData.VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36); // 绘制立方体
 

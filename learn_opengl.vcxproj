@@ -62,8 +62,10 @@
     <Text Include="src\chapter2_light\3_material\1_box_vs.txt" />
     <Text Include="src\chapter2_light\3_material\2_box_fs.txt" />
     <Text Include="src\chapter2_light\3_material\2_box_vs.txt" />
-    <Text Include="src\chapter2_light\3_material\3_box_fs.txt" />
-    <Text Include="src\chapter2_light\3_material\3_box_vs.txt" />
+    <Text Include="src\chapter2_light\4_light_texMap\1_box_fs.txt" />
+    <Text Include="src\chapter2_light\4_light_texMap\1_box_vs.txt" />
+    <Text Include="src\chapter2_light\4_light_texMap\2_box_fs.txt" />
+    <Text Include="src\chapter2_light\4_light_texMap\2_box_vs.txt" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="libs\glfw3.lib" />
@@ -87,8 +89,11 @@
     <None Include="src\chapter2_light\2_basic_lighting\1_code_light.fs" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="C:\Users\tianyu.huo\Desktop\container2_specular.png" />
     <Image Include="resources\awesomeface.png" />
     <Image Include="resources\container.jpg" />
+    <Image Include="resources\container2.png" />
+    <Image Include="resources\container2_specular.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
