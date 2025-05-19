@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\chapter2_light\4_light_texMap\exercise4_emmision_map.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\realize\process_events.cpp" />
     <ClCompile Include="src\realize\set_uniform.cpp" />
@@ -66,6 +67,8 @@
     <Text Include="src\chapter2_light\4_light_texMap\1_box_vs.txt" />
     <Text Include="src\chapter2_light\4_light_texMap\2_box_fs.txt" />
     <Text Include="src\chapter2_light\4_light_texMap\2_box_vs.txt" />
+    <Text Include="src\chapter2_light\4_light_texMap\exercise2_box_fs.txt" />
+    <Text Include="src\chapter2_light\4_light_texMap\exercise4_box_fs.txt" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="libs\glfw3.lib" />
@@ -94,6 +97,8 @@
     <Image Include="resources\container.jpg" />
     <Image Include="resources\container2.png" />
     <Image Include="resources\container2_specular.png" />
+    <Image Include="resources\lighting_maps_specular_color.png" />
+    <Image Include="resources\matrix.jpg" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
