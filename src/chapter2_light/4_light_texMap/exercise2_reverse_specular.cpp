@@ -13,7 +13,7 @@ typedef unsigned int uint;
 
 const int WIDTH = 1800;
 const int HEIGHT = 1200;
-const char* boxVertexCodePath = "./src/chapter2_light/4_light_texMap/2_box_vs.txt";
+const char* boxVertexCodePath = "./src/chapter2_light/4_light_texMap/1_box_vs.txt";
 const char* boxFragmentCodePath = "./src/chapter2_light/4_light_texMap/exercise2_box_fs.txt";
 const char* lightFragmentCodePath = "./src/chapter2_light/2_basic_lighting/1_light_fs.txt";
 const char* lightVertexCodePath = "./src/chapter2_light/2_basic_lighting/1_light_vs.txt";

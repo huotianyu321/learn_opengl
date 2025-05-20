@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\chapter2_light\5_light_caster\1_direction_light.cpp" />
+    <ClCompile Include="src\chapter2_light\5_light_caster\2_point_light.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\realize\process_events.cpp" />
     <ClCompile Include="src\realize\set_uniform.cpp" />
@@ -66,11 +66,11 @@
     <Text Include="src\chapter2_light\4_light_texMap\1_box_fs.txt" />
     <Text Include="src\chapter2_light\4_light_texMap\1_box_vs.txt" />
     <Text Include="src\chapter2_light\4_light_texMap\2_box_fs.txt" />
-    <Text Include="src\chapter2_light\4_light_texMap\2_box_vs.txt" />
     <Text Include="src\chapter2_light\4_light_texMap\exercise2_box_fs.txt" />
     <Text Include="src\chapter2_light\4_light_texMap\exercise4_box_fs.txt" />
     <Text Include="src\chapter2_light\5_light_caster\1_box_fs.txt" />
     <Text Include="src\chapter2_light\5_light_caster\1_box_vs.txt" />
+    <Text Include="src\chapter2_light\5_light_caster\2_box_fs.txt" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="libs\glfw3.lib" />
@@ -94,7 +94,6 @@
     <None Include="src\chapter2_light\2_basic_lighting\1_code_light.fs" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="C:\Users\tianyu.huo\Desktop\container2_specular.png" />
     <Image Include="resources\awesomeface.png" />
     <Image Include="resources\container.jpg" />
     <Image Include="resources\container2.png" />
