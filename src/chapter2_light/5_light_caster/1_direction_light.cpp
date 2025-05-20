@@ -1,4 +1,4 @@
-// 添加一张放射光贴图，物体能够忽略光照条件进行发光(Glow)
+// 平行光
 
 #include <HEADER/utils.hpp>
 #include <HEADER/shader_class.hpp>
@@ -12,13 +12,12 @@ typedef unsigned int uint;
 
 const int WIDTH = 1800;
 const int HEIGHT = 1200;
-const char* boxVertexCodePath = "./src/chapter2_light/4_light_texMap/2_box_vs.txt";
-const char* boxFragmentCodePath = "./src/chapter2_light/4_light_texMap/exercise4_box_fs.txt";
+const char* boxVertexCodePath = "./src/chapter2_light/5_light_caster/1_box_vs.txt";
+const char* boxFragmentCodePath = "./src/chapter2_light/5_light_caster/1_box_fs.txt";
 const char* lightFragmentCodePath = "./src/chapter2_light/2_basic_lighting/1_light_fs.txt";
 const char* lightVertexCodePath = "./src/chapter2_light/2_basic_lighting/1_light_vs.txt";
 const char* diffuseTexMapPath = "./resources/container2.png";
 const char* specularTexMapPath = "./resources/container2_specular.png";
-const char* emissionTexMapPath = "./resources/matrix.jpg";
 
 Camera camera = Camera(
 	glm::vec3(0.0f, 0.0f, 3.0f), // 初始位置
@@ -110,29 +109,41 @@ int main() {
 	);
 
 	// 光源位置
-	glm::vec3 lightPos(0.0f, 0.2f, 2.0f);
+	//glm::vec3 lightPos(0.2f, 1.0f, 0.3f);
 
 	uint diffuseTexMap = createTexture(diffuseTexMapPath, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR, true, false);
 	uint specularTexMap = createTexture(specularTexMapPath, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR, true, false);
-	uint emissionTexMap = createTexture(emissionTexMapPath, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR, false, false);
 
 	// 光照着色器(应用在立方体上）
 	Shader boxShader(boxVertexCodePath, boxFragmentCodePath);
 	boxShader.use();
 	// 这些没有改变过，就放在loop外边了
-	boxShader.set3Float("light.position", lightPos.x, lightPos.y, lightPos.z);
+	boxShader.set3Float("light.direction", -0.0f, -0.5f, -1.0f);
 	boxShader.set3Float("light.ambient", 0.2f, 0.2f, 0.2f);
 	boxShader.set3Float("light.diffuse", 0.5f, 0.5f, 0.5f);
 	boxShader.set3Float("light.specular", 1.0f, 1.0f, 1.0f);
 	boxShader.setFloat("material.shininess", 32.0f);
 	boxShader.setInt("matierial.diffuse", 0); // 将漫反射贴图纹理采样器绑定到纹理单元0
 	boxShader.setInt("material.specular", 1); // 将镜面反射贴图纹理采样器绑定到纹理单元1
-	boxShader.setInt("material.emission", 2); // 放射光
 
 	// 光源着色器
 	Shader lightShader(lightVertexCodePath, lightFragmentCodePath);
 	lightShader.use();
 	lightShader.set3Float("lightColor", 1.0f, 1.0f, 1.0f);
+
+	glm::vec3 cubePositions[] = {
+		glm::vec3(0.0f,  0.0f,  0.0f),
+		glm::vec3(2.0f,  5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f,  3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f,  2.0f, -2.5f),
+		glm::vec3(1.5f,  0.2f, -1.5f),
+		glm::vec3(-1.3f,  1.0f, -1.5f)
+	};
+
 
 	jobBeforeEnterRenderLoop(window);
 	// 渲染循环
@@ -159,29 +170,35 @@ int main() {
 		boxShader.use();
 		boxShader.setMat4("projection", projection);
 		boxShader.setMat4("view", view);
-		boxShader.setMat4("model", boxModel);
 		boxShader.set1Vec3("viewPos", camera.Position);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, diffuseTexMap);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, specularTexMap);
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, emissionTexMap);
 		glBindVertexArray(boxVaoData.VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36); // 绘制立方体
 
-		// 光源 模型矩阵
-		glm::mat4 lightModel;
-		lightModel = glm::translate(lightModel, lightPos);
-		lightModel = glm::scale(lightModel, glm::vec3(0.2f));
+		for (uint i = 0; i < 10; ++i) {
+			boxModel = glm::translate(boxModel, cubePositions[i]);
+			//float angle = 20.0f * i;
+			//boxModel = glm::rotate(boxModel, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+			boxShader.setMat4("model", boxModel);
 
-		// 绘制光源立方体
-		lightShader.use();
-		lightShader.setMat4("projection", projection);
-		lightShader.setMat4("view", view);
-		lightShader.setMat4("model", lightModel);
-		glBindVertexArray(lightVaoData.VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36); // 绘制光源
+			glDrawArrays(GL_TRIANGLES, 0, 36); // 绘制立方体
+		}
+
+		/*平行光情况下不绘制光源*/
+		//// 光源 模型矩阵
+		//glm::mat4 lightModel;
+		//lightModel = glm::translate(lightModel, lightPos);
+		//lightModel = glm::scale(lightModel, glm::vec3(0.2f));
+
+		//// 绘制光源立方体
+		//lightShader.use();
+		//lightShader.setMat4("projection", projection);
+		//lightShader.setMat4("view", view);
+		//lightShader.setMat4("model", lightModel);
+		//glBindVertexArray(lightVaoData.VAO);
+		//glDrawArrays(GL_TRIANGLES, 0, 36); // 绘制光源
 
 		jobBeforRenderLoopEnd(window);
 	}

@@ -161,7 +161,6 @@ int main() {
 		boxShader.setMat4("view", view);
 		boxShader.setMat4("model", boxModel);
 		boxShader.set1Vec3("viewPos", camera.Position);
-		boxShader.setInt("material.diffuse", 0);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, diffuseTexMap);
 		glActiveTexture(GL_TEXTURE1);
