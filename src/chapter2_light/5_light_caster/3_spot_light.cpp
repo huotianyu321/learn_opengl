@@ -13,7 +13,7 @@ typedef unsigned int uint;
 const int WIDTH = 1800;
 const int HEIGHT = 1200;
 const char* boxVertexCodePath = "./src/chapter2_light/5_light_caster/1_box_vs.txt";
-const char* boxFragmentCodePath = "./src/chapter2_light/5_light_caster/2_box_fs.txt";
+const char* boxFragmentCodePath = "./src/chapter2_light/5_light_caster/3_box_fs.txt";
 const char* lightFragmentCodePath = "./src/chapter2_light/2_basic_lighting/1_light_fs.txt";
 const char* lightVertexCodePath = "./src/chapter2_light/2_basic_lighting/1_light_vs.txt";
 const char* diffuseTexMapPath = "./resources/container2.png";
@@ -118,13 +118,10 @@ int main() {
 	Shader boxShader(boxVertexCodePath, boxFragmentCodePath);
 	boxShader.use();
 	// 这些没有改变过，就放在loop外边了
-	boxShader.set3Float("light.position", lightPos.x, lightPos.y, lightPos.z);
+	boxShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
 	boxShader.set3Float("light.ambient", 0.2f, 0.2f, 0.2f);
 	boxShader.set3Float("light.diffuse", 0.5f, 0.5f, 0.5f);
 	boxShader.set3Float("light.specular", 1.0f, 1.0f, 1.0f);
-	boxShader.setFloat("light.constant", 1.0f);
-	boxShader.setFloat("light.linear", 0.014f);
-	boxShader.setFloat("light.quadratic", 0.0007f);
 
 	boxShader.setFloat("material.shininess", 32.0f);
 	boxShader.setInt("matierial.diffuse", 0); // 将漫反射贴图纹理采样器绑定到纹理单元0
@@ -175,6 +172,11 @@ int main() {
 		boxShader.setMat4("projection", projection);
 		boxShader.setMat4("view", view);
 		boxShader.set1Vec3("viewPos", camera.Position);
+		boxShader.set1Vec3("light.position", camera.Position);
+		boxShader.set1Vec3("light.direction", camera.Front);
+		boxShader.setFloat("light.constant", 1.0f);
+		boxShader.setFloat("light.linear", 0.014f);
+		boxShader.setFloat("light.quadratic", 0.0007f);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, diffuseTexMap);
 		glActiveTexture(GL_TEXTURE1);

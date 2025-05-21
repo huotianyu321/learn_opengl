@@ -108,7 +108,7 @@ int main() {
 		0, 3, 8, 0
 	);
 
-	// 光源位置
+	// 光源位置, 平行光不显示光源
 	//glm::vec3 lightPos(0.2f, 1.0f, 0.3f);
 
 	uint diffuseTexMap = createTexture(diffuseTexMapPath, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR, true, false);

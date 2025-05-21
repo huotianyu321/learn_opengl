@@ -7,8 +7,8 @@ in vec2 TexCoords;
 
 struct Material {
     sampler2D diffuse; // 采样漫反射贴图（环境光颜色和漫反射颜色都用漫反射贴图）
-    sampler2D specular; // 镜面光颜色
-    sampler2D emission; // 放射光颜色
+    sampler2D specular; // 镜面光贴图
+    sampler2D emission; // 放射光贴图
     float shininess; // 高光反光度
 };
 uniform Material material;
