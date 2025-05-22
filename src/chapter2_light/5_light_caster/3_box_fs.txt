@@ -34,7 +34,7 @@ void main()
     vec3 lightDir = normalize(light.position - FragPos); // 从片段指向光源的方向向量
     float theta = dot(lightDir, normalize(-light.direction)); // 夹角余弦值
 
-    if (theta < light.cutOff) { // 在切光角以内
+    if (theta > light.cutOff) { // 在切光角以内(注意这里是余弦值，角度越小，余弦值越大)
 
         // 环境光
         vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoords)); 

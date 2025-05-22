@@ -1,4 +1,4 @@
-// 平行光
+// 聚光灯 - 实现一个第一人称视角的聚光灯（手电筒）
 
 #include <HEADER/utils.hpp>
 #include <HEADER/shader_class.hpp>
@@ -26,11 +26,11 @@ Camera camera = Camera(
 	0.0f // 初始Pitch 俯仰角
 );
 
-float lastX = 0;
-float lastY = 0;
+float lastX = WIDTH / 2;
+float lastY = HEIGHT / 2;
 float deltaTime = 0.0f;
 float lastFrameTime = 0.0f;
-bool mouseControlActive = false; // 当鼠标移到窗口中心再激活
+float isFirstTimeMouseMove = true;
 
 void windowSizeChangeCallback(GLFWwindow* window, int newWidth, int newHeight);
 void mouseMoveCallBack(GLFWwindow* window, double xposIn, double yposIn);
@@ -198,12 +198,12 @@ int main() {
 		lightModel = glm::scale(lightModel, glm::vec3(0.2f));
 
 		// 绘制光源立方体
-		lightShader.use();
-		lightShader.setMat4("projection", projection);
-		lightShader.setMat4("view", view);
-		lightShader.setMat4("model", lightModel);
-		glBindVertexArray(lightVaoData.VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36); // 绘制光源
+		//lightShader.use();
+		//lightShader.setMat4("projection", projection);
+		//lightShader.setMat4("view", view);
+		//lightShader.setMat4("model", lightModel);
+		//glBindVertexArray(lightVaoData.VAO);
+		//glDrawArrays(GL_TRIANGLES, 0, 36); // 绘制光源
 
 		jobBeforRenderLoopEnd(window);
 	}
@@ -224,30 +224,19 @@ void mouseMoveCallBack(GLFWwindow* window, double xPosIn, double yPosIn) {
 	// 当前帧的鼠标位置
 	float xPos = static_cast<float>(xPosIn);
 	float yPos = static_cast<float>(yPosIn);
-	std::cout << "X: " << xPos << " Y: " << yPos << std::endl;
+	// std::cout << "X: " << xPos << " Y: " << yPos << std::endl;
 
-	// 让鼠标从外边移动到中心再激活控制
-	if (
-		!mouseControlActive
-		&& xPos >= WIDTH / 2 - 10
-		&& xPos <= WIDTH / 2 + 10
-		&& yPos >= HEIGHT / 2 - 10
-		&& yPos <= HEIGHT / 2 + 10
-		) {
-		mouseControlActive = true; // 鼠标移到窗口中心时激活
+	if (isFirstTimeMouseMove) {
 		lastX = xPos;
 		lastY = yPos;
-	}
-
-	if (!mouseControlActive) {
-		return;
+		isFirstTimeMouseMove = false;
 	}
 
 	// 计算鼠标移动的距离
 	float xOffset = xPos - lastX;
-	// 反向y轴，屏幕坐标系是以左上角为原点的. 
-	// 当鼠标向下移动时，y坐标增大，但此时俯仰角应该减小
+	// 反向y轴. 屏幕坐标系是以左上角为原点的, 当鼠标向下移动时，y坐标增大，但此时俯仰角应该减小
 	float yOffset = lastY - yPos;
+
 	// 更新上一帧鼠标位置
 	lastX = xPos;
 	lastY = yPos;

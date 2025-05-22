@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\chapter2_light\5_light_caster\3_spot_light.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\realize\process_events.cpp" />
     <ClCompile Include="src\realize\set_uniform.cpp" />
