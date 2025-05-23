@@ -10,9 +10,9 @@
 
 const int WIDTH = 1800;
 const int HEIGHT = 1200;
-const char* vertexCodePath = "./src/chapter2_light/1_color/1_code.vs";
-const char* boxfragmentCodePath = "./src/chapter2_light/1_color/1_code_box.fs";
-const char* lightfragmentCodePath = "./src/chapter2_light/1_color/1_code_light.fs";
+const char* vertexCodePath = "./src/chapter2_light/1_color/1_vs.txt";
+const char* boxfragmentCodePath = "./src/chapter2_light/1_color/1_box_fs.txt";
+const char* lightfragmentCodePath = "./src/chapter2_light/1_color/1_light_fs.txt";
 
 Camera camera = Camera(
 	glm::vec3(0.0f, 0.0f, 5.0f), // ≥ı ºŒª÷√

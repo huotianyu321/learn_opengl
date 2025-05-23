@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\chapter2_light\6_multi_light_caster\1.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\realize\process_events.cpp" />
     <ClCompile Include="src\realize\set_uniform.cpp" />
@@ -48,6 +49,9 @@
     <Text Include="src\chapter1\3_shader\exercise2_code.vs" />
     <Text Include="src\chapter1\3_shader\exercise3_code.fs" />
     <Text Include="src\chapter1\3_shader\exercise3_code.vs" />
+    <Text Include="src\chapter2_light\1_color\1_box_fs.txt" />
+    <Text Include="src\chapter2_light\1_color\1_light_fs.txt" />
+    <Text Include="src\chapter2_light\1_color\1_vs.txt" />
     <Text Include="src\chapter2_light\2_basic_lighting\1_box_fs.txt" />
     <Text Include="src\chapter2_light\2_basic_lighting\1_box_vs.txt" />
     <Text Include="src\chapter2_light\2_basic_lighting\1_light_fs.txt" />
@@ -71,6 +75,8 @@
     <Text Include="src\chapter2_light\5_light_caster\1_box_vs.txt" />
     <Text Include="src\chapter2_light\5_light_caster\2_box_fs.txt" />
     <Text Include="src\chapter2_light\5_light_caster\3_box_fs.txt" />
+    <Text Include="src\chapter2_light\5_light_caster\4_box_fs.txt" />
+    <Text Include="src\chapter2_light\6_multi_light_caster\1_box_fs.txt" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="libs\glfw3.lib" />
@@ -85,9 +91,6 @@
     <None Include="src\chapter1\5_transform\2_code.vs" />
     <None Include="src\chapter1\6_coordinate_system\1_code.fs" />
     <None Include="src\chapter1\6_coordinate_system\1_code.vs" />
-    <None Include="src\chapter2_light\1_color\1_code.vs" />
-    <None Include="src\chapter2_light\1_color\1_code_box.fs" />
-    <None Include="src\chapter2_light\1_color\1_code_light.fs" />
     <None Include="src\chapter2_light\2_basic_lighting\1_code_box.tfs" />
     <None Include="src\chapter2_light\2_basic_lighting\1_code_box.vs" />
     <None Include="src\chapter2_light\2_basic_lighting\1_code_box.fs" />
