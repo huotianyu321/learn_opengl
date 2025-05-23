@@ -37,7 +37,7 @@ float fov = 45.0f; // 视野角度
 
 float lastX = WIDTH / 2; // 记录上一帧鼠标位置. 初始设置为窗口中心，因为一开始相机的俯仰角和偏航角为0
 float lastY = HEIGHT / 2; 
-bool mouseControlActive = false; // 当鼠标移到窗口中心再激活
+float isFirstTimeMouseMove = true;
 float sensitivity = 0.05f; // 鼠标灵敏度
 
 float deltaTime = 0.0f; // 当前帧与上一帧的时间差
@@ -212,33 +212,21 @@ void mouse_move_cb(GLFWwindow* window, double xPosIn, double yPosIn) {
 	// 当前帧的鼠标位置
 	float xPos = static_cast<float>(xPosIn);
 	float yPos = static_cast<float>(yPosIn);
-	std::cout << "X: " << xPos << " Y: " << yPos << std::endl;
+	// std::cout << "X: " << xPos << " Y: " << yPos << std::endl;
 
-	// 让鼠标从外边移动到中心再激活控制
-	if (
-		!mouseControlActive 
-		&& xPos >= WIDTH / 2 - 10
-		&& xPos <= WIDTH / 2 + 10
-		&& yPos >= HEIGHT / 2 - 10
-		&& yPos <= HEIGHT / 2 + 10
-	) {
-		mouseControlActive = true; // 鼠标移到窗口中心时激活
+	if (isFirstTimeMouseMove) {
 		lastX = xPos;
 		lastY = yPos;
-	}
-	
-	if (!mouseControlActive) {
-		return; 
+		isFirstTimeMouseMove = false;
 	}
 
 	// 计算鼠标移动的距离
 	float xOffset = xPos - lastX;
-	// 反向y轴，屏幕坐标系是以左上角为原点的. 
-	// 当鼠标向下移动时，y坐标增大，但此时俯仰角应该减小
-	float yOffset = lastY - yPos; 
+	// 反向y轴. 屏幕坐标系是以左上角为原点的, 当鼠标向下移动时，y坐标增大，但此时俯仰角应该减小
+	float yOffset = lastY - yPos;
 
 	// 更新上一帧鼠标位置
-	lastX = xPos; 
+	lastX = xPos;
 	lastY = yPos;
 
 	yaw += xOffset * sensitivity; // 更新偏航角
