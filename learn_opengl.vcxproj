@@ -77,6 +77,7 @@
     <Text Include="src\chapter2_light\5_light_caster\3_box_fs.txt" />
     <Text Include="src\chapter2_light\5_light_caster\4_box_fs.txt" />
     <Text Include="src\chapter2_light\6_multi_light_caster\1_box_fs.txt" />
+    <Text Include="src\chapter2_light\6_multi_light_caster\1_box_vs.txt" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="libs\glfw3.lib" />
