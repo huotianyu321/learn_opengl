@@ -1,9 +1,3 @@
-// 聚光灯 - 实现一个第一人称视角的聚光灯（手电筒）- 添加外圆锥实现平滑柔滑边缘的效果
-// 光强计算公式 I = (theta - gamma) / (fi - gamma) , 其中theta是片段至光源位置方向向量和光源方向的反方向方向向量的夹角余弦值， fi是内切光角余弦值， gama是外切光角余弦值
-// 当theta <= gamma, 说明片段在外切光角以外，取0
-// 当gamma < theta < fi, 在内外切光角中间，光强为 0 - 1
-// 当theta >= fi, 在内切光角以内，取1
-
 #include <HEADER/utils.hpp>
 #include <HEADER/shader_class.hpp>
 #include <HEADER/set_uniform.hpp>
