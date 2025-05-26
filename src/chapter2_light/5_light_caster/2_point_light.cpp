@@ -167,9 +167,6 @@ int main() {
 		// 观察矩阵
 		glm::mat4 view = camera.GetViewMatrix();
 
-		// box 模型矩阵
-		glm::mat4 boxModel;
-
 		// 绘制box
 		boxShader.use();
 		boxShader.setMat4("projection", projection);
@@ -182,6 +179,8 @@ int main() {
 		glBindVertexArray(boxVaoData.VAO);
 
 		for (uint i = 0; i < 10; ++i) {
+			// box 模型矩阵
+			glm::mat4 boxModel;
 			boxModel = glm::translate(boxModel, cubePositions[i]);
 			float angle = 20.0f * i;
 			boxModel = glm::rotate(boxModel, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));

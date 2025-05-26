@@ -1,5 +1,3 @@
-// 聚光灯 - 实现一个第一人称视角的聚光灯（手电筒）
-
 #include <HEADER/utils.hpp>
 #include <HEADER/shader_class.hpp>
 #include <HEADER/set_uniform.hpp>
@@ -12,8 +10,8 @@ typedef unsigned int uint;
 
 const int WIDTH = 1800;
 const int HEIGHT = 1200;
-const char* boxVertexCodePath = "./src/chapter2_light/5_light_caster/1_box_vs.txt";
-const char* boxFragmentCodePath = "./src/chapter2_light/5_light_caster/3_box_fs.txt";
+const char* boxVertexCodePath = "./src/chapter2_light/6_multi_light_caster/1_box_vs.txt";
+const char* boxFragmentCodePath = "./src/chapter2_light/6_multi_light_caster/1_box_fs.txt";
 const char* lightFragmentCodePath = "./src/chapter2_light/2_basic_lighting/1_light_fs.txt";
 const char* lightVertexCodePath = "./src/chapter2_light/2_basic_lighting/1_light_vs.txt";
 const char* diffuseTexMapPath = "./resources/container2.png";
@@ -108,23 +106,14 @@ int main() {
 		0, 3, 8, 0
 	);
 
-	// 光源位置
-	glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
-
 	uint diffuseTexMap = createTexture(diffuseTexMapPath, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR, true, false);
 	uint specularTexMap = createTexture(specularTexMapPath, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR, true, false);
 
 	// 光照着色器(应用在立方体上）
 	Shader boxShader(boxVertexCodePath, boxFragmentCodePath);
 	boxShader.use();
-	// 这些没有改变过，就放在loop外边了
-	boxShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
-	boxShader.set3Float("light.ambient", 0.2f, 0.2f, 0.2f);
-	boxShader.set3Float("light.diffuse", 0.5f, 0.5f, 0.5f);
-	boxShader.set3Float("light.specular", 1.0f, 1.0f, 1.0f);
-
 	boxShader.setFloat("material.shininess", 32.0f);
-	boxShader.setInt("matierial.diffuse", 0); // 将漫反射贴图纹理采样器绑定到纹理单元0
+	boxShader.setInt("material.diffuse", 0); // 将漫反射贴图纹理采样器绑定到纹理单元0
 	boxShader.setInt("material.specular", 1); // 将镜面反射贴图纹理采样器绑定到纹理单元1
 
 	// 光源着色器
@@ -145,6 +134,18 @@ int main() {
 		glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
 
+	glm::vec3 pointLightPositions[] = {
+		glm::vec3(0.7f,  0.2f,  2.0f),
+		glm::vec3(2.3f, -3.3f, -4.0f),
+		glm::vec3(-4.0f,  2.0f, -12.0f),
+		glm::vec3(0.0f,  0.0f, -3.0f)
+	};
+	glm::vec3 pointLightColors[] = {
+		glm::vec3(1.0f, 0.6f, 0.0f),
+		glm::vec3(1.0f, 0.0f, 0.0f),
+		glm::vec3(1.0f, 1.0, 0.0),
+		glm::vec3(0.2f, 0.2f, 1.0f)
+	};
 
 	jobBeforeEnterRenderLoop(window);
 	// 渲染循环
@@ -154,7 +155,7 @@ int main() {
 		deltaTime = currentFrameTime - lastFrameTime;
 		lastFrameTime = currentFrameTime;
 
-		jobAtRenderLoopStart(window);
+		jobAtRenderLoopStart(window); // 把清屏颜色换成glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		processWASD(window, camera, deltaTime);
 
 		// 透视投影矩阵
@@ -169,11 +170,35 @@ int main() {
 		boxShader.setMat4("projection", projection);
 		boxShader.setMat4("view", view);
 		boxShader.set1Vec3("viewPos", camera.Position);
-		boxShader.set1Vec3("light.position", camera.Position);
-		boxShader.set1Vec3("light.direction", camera.Front);
-		boxShader.setFloat("light.constant", 1.0f);
-		boxShader.setFloat("light.linear", 0.014f);
-		boxShader.setFloat("light.quadratic", 0.0007f);
+
+		// dirLight
+		boxShader.set3Float("dirLight.direction", -0.2f, -1.0f, -0.3f);
+		boxShader.set3Float("dirLight.ambient", 0.3f, 0.24f, 0.14f);
+		boxShader.set3Float("dirLight.diffuse", 0.7f, 0.42f, 0.26f);
+		boxShader.set3Float("dirLight.specular", 0.5f, 0.5f, 0.5f);
+		// spotLight
+		boxShader.set1Vec3("spotLight.position", camera.Position);
+		boxShader.set1Vec3("spotLight.direction", camera.Front);
+		boxShader.setFloat("spotLight.constant", 1.0f);
+		boxShader.setFloat("spotLight.linear", 0.09f);
+		boxShader.setFloat("spotLight.quadratic", 0.032f);
+		boxShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f))); // 内切光角
+		boxShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(13.0f))); // 外切光角 
+		boxShader.set3Float("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+		boxShader.set3Float("spotLight.diffuse", 0.8f, 0.8f, 0.0f);
+		boxShader.set3Float("spotLight.specular", 0.8f, 0.8f, 0.0f);
+		// point light
+		for (int i = 0; i < 4; i++) {
+			const std::string prefix = "pointLights[" + std::to_string(i) + "]";
+			boxShader.set1Vec3((prefix + ".position").c_str(), pointLightPositions[i]);
+			boxShader.set3Float((prefix + ".ambient").c_str(), pointLightColors[i].x * 0.1, pointLightColors[i].y * 0.1, pointLightColors[i].z * 0.1);
+			boxShader.set1Vec3((prefix + ".diffuse").c_str(), pointLightColors[i]);
+			boxShader.set1Vec3((prefix + ".specular").c_str(), pointLightColors[i]);
+			boxShader.setFloat((prefix + ".constant").c_str(), 1.0f);
+			boxShader.setFloat((prefix + ".linear").c_str(), 0.09f);
+			boxShader.setFloat((prefix + ".quadratic").c_str(), 0.032f);
+		}
+
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, diffuseTexMap);
 		glActiveTexture(GL_TEXTURE1);
@@ -181,7 +206,6 @@ int main() {
 		glBindVertexArray(boxVaoData.VAO);
 
 		for (uint i = 0; i < 10; ++i) {
-			// box 模型矩阵
 			glm::mat4 boxModel;
 			boxModel = glm::translate(boxModel, cubePositions[i]);
 			float angle = 20.0f * i;
@@ -191,18 +215,21 @@ int main() {
 			glDrawArrays(GL_TRIANGLES, 0, 36); // 绘制立方体
 		}
 
-		// 光源 模型矩阵
-		glm::mat4 lightModel;
-		lightModel = glm::translate(lightModel, lightPos);
-		lightModel = glm::scale(lightModel, glm::vec3(0.2f));
+		// 绘制光源
+		lightShader.use();
+		lightShader.setMat4("projection", projection);
+		lightShader.setMat4("view", view);
+		glBindVertexArray(lightVaoData.VAO);
 
-		// 绘制光源立方体
-		//lightShader.use();
-		//lightShader.setMat4("projection", projection);
-		//lightShader.setMat4("view", view);
-		//lightShader.setMat4("model", lightModel);
-		//glBindVertexArray(lightVaoData.VAO);
-		//glDrawArrays(GL_TRIANGLES, 0, 36); // 绘制光源
+		for (uint i = 0; i < 4; ++i) {
+			glm::mat4 lightModel;
+			lightModel = glm::translate(lightModel, pointLightPositions[i]);
+			lightModel = glm::scale(lightModel, glm::vec3(0.2f));
+			lightShader.setMat4("model", lightModel);
+
+			glDrawArrays(GL_TRIANGLES, 0, 36); // 绘制光源
+		}
+
 
 		jobBeforRenderLoopEnd(window);
 	}
