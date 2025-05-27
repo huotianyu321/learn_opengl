@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\chapter3_load_model\1_assimp\1_assimp_test.cpp" />
+    <ClCompile Include="src\chapter2_light\6_multi_light_caster\1_desert.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\realize\process_events.cpp" />
     <ClCompile Include="src\realize\set_uniform.cpp" />
