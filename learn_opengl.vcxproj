@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\chapter2_light\6_multi_light_caster\1_desert.cpp" />
+    <ClCompile Include="src\chapter3_load_model\1_assimp\1_assimp_test.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\realize\process_events.cpp" />
     <ClCompile Include="src\realize\set_uniform.cpp" />
@@ -80,9 +80,11 @@
     <Text Include="src\chapter2_light\6_multi_light_caster\1_box_vs.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Library Include="libs\assimp-vc143-mt.lib" />
     <Library Include="libs\glfw3.lib" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="resources\m.ply" />
     <None Include="src\chapter1\4_texture\1_code.fs" />
     <None Include="src\chapter1\4_texture\1_code.vs" />
     <None Include="src\chapter1\4_texture\2_code.fs" />
@@ -200,7 +202,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc143-mt.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
