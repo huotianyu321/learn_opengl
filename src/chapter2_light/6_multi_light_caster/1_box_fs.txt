@@ -69,15 +69,15 @@ void main() {
     vec3 diffuseColor = vec3(texture(material.diffuse, TexCoords));
     vec3 specularColor = vec3(texture(material.specular, TexCoords));
 
-    vec3 output;
+    vec3 outputColor;
 
-    output += calcDirLight(dirLight, normal, viewDir, diffuseColor, specularColor);
+    outputColor += calcDirLight(dirLight, normal, viewDir, diffuseColor, specularColor);
     for (int i = 0; i < NR_POINT_LIGHTS; i++) {
-        output += calcPointLight(pointLights[i], normal, viewDir, FragPos, diffuseColor, specularColor);
+        outputColor += calcPointLight(pointLights[i], normal, viewDir, FragPos, diffuseColor, specularColor);
     }
-    output += calcSpotLight(spotLight, normal, viewDir, FragPos, diffuseColor, specularColor);
+    outputColor += calcSpotLight(spotLight, normal, viewDir, FragPos, diffuseColor, specularColor);
 
-    FragColor = vec4(output, 1.0);
+    FragColor = vec4(outputColor, 1.0);
 
 }
 
