@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="src\realize\mesh_class.cpp" />
     <ClCompile Include="src\glad.c" />
+    <ClCompile Include="src\realize\model_class.cpp" />
     <ClCompile Include="src\realize\process_events.cpp" />
     <ClCompile Include="src\realize\set_uniform.cpp" />
     <ClCompile Include="src\realize\shader_class.cpp" />

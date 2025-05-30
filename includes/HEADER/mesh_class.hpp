@@ -13,7 +13,7 @@
 struct Vertex {
 	glm::vec3 Position;
 	glm::vec3 Normal;
-	glm::vec3 TexCoords;
+	glm::vec2 TexCoords;
 };
 
 struct Texture {
@@ -21,6 +21,9 @@ struct Texture {
 	std::string type;
 };
 
+/*
+* 网格类
+*/
 class Mesh {
 public:
 	// 顶点数据数组

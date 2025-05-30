@@ -42,6 +42,13 @@ void Mesh::Draw(Shader shader)
 		shader.setInt(uniformName.c_str(), i);
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);
 	}
+
+	glBindVertexArray(VAO);
+	glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
+
+	// 取消绑定是一个好习惯
+	glBindVertexArray(0);
+	glActiveTexture(GL_TEXTURE0);
 }
 
 void Mesh::setupMesh() {
