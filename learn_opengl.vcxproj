@@ -33,6 +33,7 @@
     <ClInclude Include="includes\GLFW\glfw3native.h" />
     <ClInclude Include="includes\headers\call_backs.h" />
     <ClInclude Include="includes\HEADER\mesh_class.hpp" />
+    <ClInclude Include="includes\HEADER\model_class.hpp" />
     <ClInclude Include="includes\HEADER\process_events.hpp" />
     <ClInclude Include="includes\HEADER\set_uniform.hpp" />
     <ClInclude Include="includes\KHR\khrplatform.h" />

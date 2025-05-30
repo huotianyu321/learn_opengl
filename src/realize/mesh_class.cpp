@@ -9,10 +9,12 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
 	this->setupMesh();
 }
 
-void Mesh::Draw(Shader shader)
+void Mesh::Draw(Shader& shader)
 {
 	unsigned int diffuseNr = 1;
 	unsigned int specularNr = 1;
+	unsigned int normalNr = 1;
+	unsigned int heightNr = 1;
 
 	// 为每一个纹理分配一个纹理采样器
 	for (unsigned int i = 0; i < textures.size(); i++) {
@@ -25,6 +27,12 @@ void Mesh::Draw(Shader shader)
 		}
 		else if (type == "texture_specular") {
 			number = std::to_string(specularNr++);
+		}
+		else if (type == "texture_normal") {
+			number = std::to_string(normalNr++);
+		}
+		else if (type == "texture_height") {
+			number = std::to_string(heightNr++);
 		}
 
 		// 对应的shader中的纹理采样器应该为：
@@ -75,6 +83,23 @@ void Mesh::setupMesh() {
 	// 纹理坐标
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, TexCoords)));
+
+	// 切线
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, Tangent)));
+
+	// 双切线
+	glEnableVertexAttribArray(4);
+	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, Bitangent)));
+
+
+	// 骨骼id, 注意传递整数类型时没有GL_FALSE这个参数
+	glEnableVertexAttribArray(5);
+	glVertexAttribIPointer(5, MAX_BONE_INFLUENCE, GL_INT, sizeof(Vertex), (void*)(offsetof(Vertex, m_BoneIDs)));
+
+	// 骨骼权重
+	glEnableVertexAttribArray(6);
+	glVertexAttribPointer(6, MAX_BONE_INFLUENCE, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, m_Weights)));
 
 	glBindVertexArray(0);
 
