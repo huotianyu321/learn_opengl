@@ -1,7 +1,6 @@
 #include <HEADER/utils.hpp>
 #include <HEADER/process_events.hpp>
 #include <iostream>
-#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image/stb_image.h>
 
 GLFWwindow* initAndCreateWindow(int width, int height, const char* title) {
@@ -23,8 +22,6 @@ GLFWwindow* initAndCreateWindow(int width, int height, const char* title) {
 
 	// 设置当前上下文
 	glfwMakeContextCurrent(window);
-	// 隐藏鼠标
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	// 隐藏鼠标并且将其捕获在窗口中心
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 

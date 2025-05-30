@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\chapter3_load_model\1_load_model.cpp" />
     <ClCompile Include="src\realize\mesh_class.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\realize\model_class.cpp" />
@@ -81,13 +82,14 @@
     <Text Include="src\chapter2_light\5_light_caster\4_box_fs.txt" />
     <Text Include="src\chapter2_light\6_multi_light_caster\1_box_fs.txt" />
     <Text Include="src\chapter2_light\6_multi_light_caster\1_box_vs.txt" />
+    <Text Include="src\chapter3_load_model\1_fs.txt" />
+    <Text Include="src\chapter3_load_model\1_vs.txt" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="libs\assimp-vc143-mt.lib" />
     <Library Include="libs\glfw3.lib" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\m.ply" />
     <None Include="src\chapter1\4_texture\1_code.fs" />
     <None Include="src\chapter1\4_texture\1_code.vs" />
     <None Include="src\chapter1\4_texture\2_code.fs" />

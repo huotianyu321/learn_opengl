@@ -1,9 +1,8 @@
 #pragma once
+
 #include <assimp/Importer.hpp> 
 #include <assimp/scene.h>      
 #include <assimp/postprocess.h>
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image/stb_image.h>
 
 #include <HEADER/shader_class.hpp>
 #include <HEADER/mesh_class.hpp>

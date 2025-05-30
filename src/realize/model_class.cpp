@@ -1,22 +1,20 @@
+#include <stb_image/stb_image.h>
 #include <HEADER/model_class.hpp>
-/*
-* 从文件加载纹理
-* @param path 纹理文件相对于模型文件所在目录的子路径
-* @param directory 模型文件所在目录
-* @return 纹理ID
-*/
-unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma = false);
-
 
 /*
 * 模型类
 */
 
 
-Model::Model(const std::string& path, bool gamma = false) : gammaCorrection(gamma) {
+Model::Model(const std::string& path, bool gamma) : gammaCorrection(gamma) {
 
 	loadModel(path);
 
+	std::cout << "模型加载完成, 共" << meshes.size() << "个网格, " << textures_loaded.size() << "个纹理" << std::endl;
+	for (unsigned int i = 0; i < textures_loaded.size(); i++) {
+		const Texture& texture = textures_loaded[i];
+		std::cout << i << ": " << texture.type << std::endl;
+	}
 }
 
 void Model::Draw(Shader& shader) {
@@ -135,6 +133,8 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene) {
 	std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
 	textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
+	return Mesh(vertices, indices, textures);
+
 }
 
 std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName) {
@@ -148,7 +148,8 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 
 		for (unsigned int j = 0; j < textures_loaded.size(); j++) {
 			const Texture& loadedTexture = textures_loaded[j];
-			if (loadedTexture.path.c_str() == texturePath.C_Str()) {
+
+			if (strcmp(loadedTexture.path.c_str(), texturePath.C_Str()) == 0) {
 				textures.push_back(loadedTexture);
 				skip = true;
 				break;
@@ -171,10 +172,11 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 }
 
 
-unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma = false)
+unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma)
 {
 	std::string subPath = std::string(path);
 	std::string filename = directory + '/' + subPath;
+	std::cout << "loading texture: " << filename << std::endl;
 
 	unsigned int textureID;
 	glGenTextures(1, &textureID);

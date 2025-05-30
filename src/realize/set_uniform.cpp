@@ -14,7 +14,7 @@ void set3float(
 ) {
 	int location = findUniform(shaderProgramID, uniformName);
 	if (location == -1) {
-		std::cout << "uniform: " << uniformName << " not found" << std::endl;
+		//std::cout << "uniform: " << uniformName << " not found" << std::endl;
 		return;
 	}
 
@@ -25,7 +25,7 @@ void set3float(
 void set1vec3(unsigned int shaderProgramID, const std::string& uniformName, const glm::vec3& vec3) {
 	int location = findUniform(shaderProgramID, uniformName);
 	if (location == -1) {
-		std::cout << "uniform: " << uniformName << " not found" << std::endl;
+		//std::cout << "uniform: " << uniformName << " not found" << std::endl;
 		return;
 	}
 
@@ -44,7 +44,7 @@ void set4float(
 ) {
 	int location = findUniform(shaderProgramID, uniformName);
 	if (location == -1) {
-		std::cout << "uniform: " << uniformName << " not found" << std::endl;
+		//std::cout << "uniform: " << uniformName << " not found" << std::endl;
 		return;
 	}
 
@@ -56,7 +56,7 @@ void set1float(unsigned int shaderProgramID, const std::string& uniformName, flo
 {
 	int location = findUniform(shaderProgramID, uniformName);
 	if (location == -1) {
-		std::cout << "uniform: " << uniformName << " not found" << std::endl;
+		//std::cout << "uniform: " << uniformName << " not found" << std::endl;
 		return;
 	}
 
@@ -67,7 +67,7 @@ void set1float(unsigned int shaderProgramID, const std::string& uniformName, flo
 void set1int(unsigned int shaderProgramID, const std::string& uniformName, int i) {
 	int location = findUniform(shaderProgramID, uniformName);
 	if (location == -1) {
-		std::cout << "uniform: " << uniformName << " not found" << std::endl;
+		//std::cout << "uniform: " << uniformName << " not found" << std::endl;
 		return;
 	}
 
@@ -84,7 +84,7 @@ void set1mat4(unsigned int shaderProgramID, const std::string& uniformName, cons
 {
 	int location = findUniform(shaderProgramID, uniformName);
 	if (location == -1) {
-		std::cout << "uniform: " << uniformName << " not found" << std::endl;
+		//std::cout << "uniform: " << uniformName << " not found" << std::endl;
 		return;
 	}
 
