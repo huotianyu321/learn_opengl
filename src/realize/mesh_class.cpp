@@ -1,4 +1,5 @@
 #include <HEADER/mesh_class.hpp>
+#include <iostream>
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
 {
@@ -46,7 +47,7 @@ void Mesh::Draw(Shader& shader)
 		* }
 		*/
 
-		std::string uniformName = "material." + type + number;
+		std::string uniformName = type + number;
 		shader.setInt(uniformName.c_str(), i);
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);
 	}
