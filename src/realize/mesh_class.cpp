@@ -47,7 +47,7 @@ void Mesh::Draw(Shader& shader)
 		* }
 		*/
 
-		std::string uniformName = type + number;
+		std::string uniformName = "material." + type + number;
 		shader.setInt(uniformName.c_str(), i);
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);
 	}
