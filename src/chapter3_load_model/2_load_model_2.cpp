@@ -1,3 +1,4 @@
+// 使用assimp库加载一个模型，并添加一个光照效果
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image/stb_image.h>
 

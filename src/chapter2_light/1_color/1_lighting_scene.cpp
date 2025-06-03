@@ -46,7 +46,7 @@ int main() {
 	glfwSetScrollCallback(window, mouseScrollCallBack);
 	glfwSetCursorPosCallback(window, mouseMoveCallBack);
 
-	// 立方体的顶点， 每个面两个三角形，每个三角形3个顶点 6 * 2 * 3
+	// 立方体的顶点，6个面 * 2个三角形 * 3个顶点 = 36个顶点
 	float vertices[] = {
 		-0.5f, -0.5f, -0.5f,
 		 0.5f, -0.5f, -0.5f,
@@ -101,7 +101,7 @@ int main() {
 		0, 3, 3, 0
 	);
 
-	// 光照着色器(应用在立方体上）
+	// 光照着色器(应用在立方体上）--- 教程中命名为lightingShader
 	Shader boxShader(vertexCodePath, boxfragmentCodePath); 
 	// 光源着色器
 	Shader lightShader(vertexCodePath, lightfragmentCodePath);
