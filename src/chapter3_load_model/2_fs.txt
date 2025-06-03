@@ -41,9 +41,9 @@ void main()
     vec3 diffuseColor = vec3(texture(material.texture_diffuse1, TexCoords));
     vec3 specularColor = vec3(texture(material.texture_specular1, TexCoords));
 
-    vec3 output = calcSpotLight(spotLight, normal, viewDir, FragPos, diffuseColor, specularColor);
+    vec3 outputColor = calcSpotLight(spotLight, normal, viewDir, FragPos, diffuseColor, specularColor);
 
-    FragColor = vec4(output, 1.0);
+    FragColor = vec4(outputColor, 1.0);
 }
 
 

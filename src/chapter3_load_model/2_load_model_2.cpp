@@ -60,9 +60,9 @@ int main() {
 	shader.setFloat("spotLight.constant", 1.0f);
 	shader.setFloat("spotLight.linear", 0.014f);
 	shader.setFloat("spotLight.quadratic", 0.0007f);
-	shader.set3Float("spotLight.ambient", 0.0f, 0.0f, 0.0f);
-	shader.set3Float("spotLight.diffuse", 0.0f, 0.0f, 0.0f);
-	shader.set3Float("spotLight.spcular", 0.0f, 0.0f, 0.0f);
+	shader.set3Float("spotLight.ambient", 0.2f, 0.2f, 0.2f);
+	shader.set3Float("spotLight.diffuse", 0.5f, 0.5f, 0.5f);
+	shader.set3Float("spotLight.spcular", 1.0f, 1.0f, 1.0f);
 
 	jobBeforeEnterRenderLoop(window);
 	// ‰÷»æ—≠ª∑
