@@ -1,7 +1,5 @@
 // 使用模型矩阵只让是3倍数的箱子旋转（以及第1个箱子），而让剩下的箱子保持静止
 
-#define STB_IMAGE_IMPLEMENTATION
-
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stb_image/stb_image.h>

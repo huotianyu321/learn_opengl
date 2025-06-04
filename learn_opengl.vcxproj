@@ -26,6 +26,7 @@
     <ClCompile Include="src\realize\process_events.cpp" />
     <ClCompile Include="src\realize\set_uniform.cpp" />
     <ClCompile Include="src\realize\shader_class.cpp" />
+    <ClCompile Include="src\realize\stb_image_realize.cpp" />
     <ClCompile Include="src\realize\utils.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -1,8 +1,6 @@
 // 相机环绕运动
 // lookAt矩阵glm::lookAt(相机位置, 目标位置, 世界上向量)
 
-#define STB_IMAGE_IMPLEMENTATION
-
 #include <HEADER/utils.hpp>
 #include <HEADER/call_backs.hpp>
 #include <HEADER/shader_class.hpp>

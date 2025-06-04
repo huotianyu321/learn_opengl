@@ -10,8 +10,6 @@
 
 // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);这个方法有bug
 
-#define STB_IMAGE_IMPLEMENTATION
-
 #include <HEADER/utils.hpp>
 #include <HEADER/call_backs.hpp>
 #include <HEADER/shader_class.hpp>

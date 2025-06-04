@@ -1,8 +1,6 @@
 // 更多3d: 立方体
 // 深度测试
 
-#define STB_IMAGE_IMPLEMENTATION
-
 #include <HEADER/utils.hpp>
 #include <HEADER/call_backs.hpp>
 #include <HEADER/shader_class.hpp>

@@ -1,7 +1,5 @@
 // 练习2: 修改纹理坐标 尝试其他环绕方式
 
-
-#define STB_IMAGE_IMPLEMENTATION
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stb_image/stb_image.h>

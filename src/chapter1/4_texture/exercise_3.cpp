@@ -2,8 +2,6 @@
 // 尝试使用GL_NEAREST的纹理过滤方式让像素显示得更清晰
 // ---- 把四个顶点的纹理坐标设置的尽可能接近
 
-
-#define STB_IMAGE_IMPLEMENTATION
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stb_image/stb_image.h>

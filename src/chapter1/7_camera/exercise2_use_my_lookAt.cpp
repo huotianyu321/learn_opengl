@@ -1,7 +1,5 @@
 // 使用相机类
 
-#define STB_IMAGE_IMPLEMENTATION
-
 #include <iostream>
 
 #include <glad/glad.h>
