@@ -21,7 +21,7 @@ void main()
     Normal = mat3(transpose(inverse(view * model))) * aNormal; // 计算法向量
 
     //
-    LightPos = vec3(view * vec4(lightPos, 1.0)); // 计算光源位置（输入的光源位置已经经过model变换了)
+    LightPos = vec3(view * vec4(lightPos, 1.0)); // 计算观察空间光源位置（输入的光源位置已经是世界坐标了)
 
     gl_Position = projection * view * model * vec4(aPos, 1.0);
 
