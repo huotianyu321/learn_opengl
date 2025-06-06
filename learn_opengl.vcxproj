@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\chapter4_advanced_opengl\1_depth_test\1_glDepthFunc.cpp" />
     <ClCompile Include="src\realize\mesh_class.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\realize\model_class.cpp" />
@@ -86,6 +87,8 @@
     <Text Include="src\chapter3_load_model\1_vs.txt" />
     <Text Include="src\chapter3_load_model\2_fs.txt" />
     <Text Include="src\chapter3_load_model\2_vs.txt" />
+    <Text Include="src\chapter4_advanced_opengl\1_depth_test\1_fs.txt" />
+    <Text Include="src\chapter4_advanced_opengl\1_depth_test\1_vs.txt" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="libs\assimp-vc143-mt.lib" />
@@ -107,12 +110,16 @@
     <None Include="src\chapter2_light\2_basic_lighting\1_code_light.fs" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\下载\marble.jpg" />
+    <Image Include="..\..\下载\metal.png" />
     <Image Include="resources\awesomeface.png" />
     <Image Include="resources\container.jpg" />
     <Image Include="resources\container2.png" />
     <Image Include="resources\container2_specular.png" />
     <Image Include="resources\lighting_maps_specular_color.png" />
+    <Image Include="resources\marble.jpg" />
     <Image Include="resources\matrix.jpg" />
+    <Image Include="resources\metal.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
