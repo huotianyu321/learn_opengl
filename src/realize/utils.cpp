@@ -239,6 +239,48 @@ unsigned int createTexture(
 	return texture;
 }
 
+unsigned int createTexture(const char* imagePath, unsigned int wrapS, unsigned int wrapT, unsigned int magFilter, unsigned int minFilter, bool flip)
+{
+	unsigned int texture;
+	// 创建纹理对象
+	glGenTextures(1, &texture);
+	// 绑定到2d纹理, 之后对2D纹理所作的操作都会影响这个对象
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	// 设置纹理的重复方式
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapS);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapT);
+
+	// 设置过滤方式
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
+
+	// 加载图片, 创建纹理图像  生成多级渐远纹理
+	int width, height, nrChannels;
+	// 设置翻转图片
+	stbi_set_flip_vertically_on_load(flip);
+	unsigned char* imageData = stbi_load(imagePath, &width, &height, &nrChannels, 0);
+	if (imageData) {
+		// 根据图片生成纹理图像
+		GLenum format;
+		if (nrChannels == 1)
+			format = GL_RED;
+		else if (nrChannels == 3)
+			format = GL_RGB;
+		else if (nrChannels == 4)
+			format = GL_RGBA;
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, format, GL_UNSIGNED_BYTE, imageData);
+		// 生成多级渐远纹理
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else {
+		std::cout << "image load failed " << std::endl;
+	}
+	// 释放资源
+	stbi_image_free(imageData);
+	return texture;
+}
+
 void printMat4(const glm::mat4& mat) {
 	std::cout << "=================================================\n";
 	std::cout << mat[0][0] << " " << mat[0][1] << " " << mat[0][2] << " " << mat[0][3] << std::endl;

@@ -139,6 +139,24 @@ unsigned int createTexture(
 );
 
 /*
+* 1.加载图片 2.创建纹理 - v2版本
+* @param imagePath图片文件路径
+* @param wrapS 纹理水平环绕方式
+* @param wrapT 纹理垂直环绕方式
+* @param magFilter 纹理放大过滤方式
+* @param minFilter 纹理缩小过滤方式
+* @param flip 是否翻转图片
+*/
+unsigned int createTexture(
+	const char* imagePath,
+	unsigned int wrapS,
+	unsigned int wrapT,
+	unsigned int magFilter,
+	unsigned int minFilter,
+	bool flip
+);
+
+/*
 * 打印矩阵
 */
 void printMat4(const glm::mat4& mat);

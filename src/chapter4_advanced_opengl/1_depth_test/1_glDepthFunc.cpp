@@ -118,17 +118,17 @@ int main() {
 	);
 
 	// 纹理
-	uint cubeTexture = createTexture(cudeTexturePath, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR, false, false);
-	uint planeTexture = createTexture(planeTexturePath, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR, true, false);
+	uint cubeTexture = createTexture(cudeTexturePath, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR, false);
+	uint planeTexture = createTexture(planeTexturePath, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR, false);
 
 	// 着色器
 	Shader myShader(vertexCodePath, fragmentCodePath);
 	myShader.use();
 	myShader.setInt("texture1", 0);
 
-
 	// 渲染循环
 	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_ALWAYS); // 设置深度缓冲值的比较方式
 	while (!glfwWindowShouldClose(window)) {
 		float t = glfwGetTime();
 		float currentFrameTime = t;
@@ -170,7 +170,7 @@ int main() {
 		model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
 		myShader.setMat4("model", model);
 		glBindVertexArray(planeVaoData.VAO);
-		glActiveTexture(GL_TEXTURE1);
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, planeTexture);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
